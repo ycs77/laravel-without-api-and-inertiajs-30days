@@ -1,0 +1,36 @@
+# 前後端的強力膠 Inertia.js
+
+網頁架構的當前主流是 MPA 和 SPA，但這兩種各有其利弊。為了要將 MPA 轉成 SPA，還需要維護前後端兩個專案。這時，Inertia.js 出現了，成功了解決了這個問題。Inertia.js 不需要寫前端路由和 API，保留了 MPA 和 SPA 的長處。這個系列將會介紹 Inertia.js 這個全新的前端套件和它的設計模式，建構經典後端驅動 SPA 的新方法。
+
+## 目錄
+
+1. [Day 01](docs/Day%2001.md)
+2. [Day 02](docs/Day%2002.md)
+3. [Day 03](docs/Day%2003.md)
+4. [Day 04](docs/Day%2004.md)
+5. [Day 05](docs/Day%2005.md)
+6. [Day 06](docs/Day%2006.md)
+7. [Day 07](docs/Day%2007.md)
+8. [Day 08](docs/Day%2008.md)
+9. [Day 09](docs/Day%2009.md)
+10. [Day 10](docs/Day%2010.md)
+11. [Day 11](docs/Day%2011.md)
+12. [Day 12](docs/Day%2012.md)
+13. [Day 13](docs/Day%2013.md)
+14. [Day 14](docs/Day%2014.md)
+15. [Day 15](docs/Day%2015.md)
+16. [Day 16](docs/Day%2016.md)
+17. [Day 17](docs/Day%2017.md)
+18. [Day 18](docs/Day%2018.md)
+19. [Day 19](docs/Day%2019.md)
+20. [Day 20](docs/Day%2020.md)
+21. [Day 21](docs/Day%2021.md)
+22. [Day 22](docs/Day%2022.md)
+23. [Day 23](docs/Day%2023.md)
+24. [Day 24](docs/Day%2024.md)
+25. [Day 25](docs/Day%2025.md)
+26. [Day 26](docs/Day%2026.md)
+27. [Day 27](docs/Day%2027.md)
+28. [Day 28](docs/Day%2028.md)
+29. [Day 29](docs/Day%2029.md)
+30. [Day 30](docs/Day%2030.md)
