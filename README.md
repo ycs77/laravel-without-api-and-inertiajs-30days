@@ -1,6 +1,6 @@
 # 關於我用 Laravel 寫 SPA 卻不寫 API 的那檔事
 
-當前網頁架構分別是 MPA 和 SPA，但這兩種各有其利弊。為了要將 MPA 轉成 SPA，還需要維護前後端兩個專案。這時，Inertia.js 出現了，成功了解決了這個問題。Inertia.js 它是建構經典後端驅動 SPA 的新方法，不需要寫前端路由和後端 API。這個系列會使用和 Laravel + Vue.js + Inertia.js + Tailwind CSS 這套現代網站的絕佳組合，來建構一個有簡易會員系統的(還勉強能看的)部落格網站 Lightning，從中一步步了解 Inertia.js 的使用方式~~
+當前網頁架構分別是 MPA 和 SPA，但這兩種各有其利弊。為了要將 MPA 轉成 SPA，還需要維護前後端兩個專案。這時，Inertia.js 出現了，成功了解決了這個問題。Inertia.js 它是建構經典後端驅動 SPA 的新方法，不需要寫前端路由和後端 API。這個系列會使用和 Laravel + Vue.js + Inertia.js + Tailwind CSS 這套現代網站的絕佳組合，來建構一個有簡易會員系統的(還勉強能看的)部落格平台 Lightning，從中一步步了解 Inertia.js 的使用方式~~
 
 ## 目錄
 
