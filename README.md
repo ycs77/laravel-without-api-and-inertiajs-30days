@@ -5,7 +5,7 @@
 ## 目錄
 
 1. [Day 01 為什麼我用 Laravel 寫 SPA 卻可以不寫 API?](docs/Day_01.md)
-2. [Day 02 Inertia.js 的運作方式 (協議)](docs/Day_02.md)
+2. [Day 02 Inertia.js 是什麼？](docs/Day_02.md)
 3. [Day 03 初始化 Lightning - 安裝 Laravel & Vue.js & Inertia.js](docs/Day_03.md)
 4. [Day 04 Inertia.js 的 Hello world](docs/Day_04.md)
 5. [Day 05 安裝 Tailwind CSS](docs/Day_05.md)
