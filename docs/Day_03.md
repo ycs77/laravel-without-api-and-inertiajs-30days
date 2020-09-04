@@ -1,16 +1,18 @@
 # Day 03 初始化 Lightning - 安裝 Laravel & Vue.js & Inertia.js
 
-準備好 Laravel 的開發環境後，就可以開始建構網站了。一開始有說到，
+準備好 Laravel 的開發環境後，就可以開始初始化專案了。
 
 ## 安裝 Laravel
 
-說到 Laravel 最近的大事件，就是 Laravel 8 要準備發布了！但在本系列要使用的套件，有部分還不支援 Laravel 8，因此我們還是用 Laravel 7 來建構 Lightning：
+說到 Laravel 最近的大事件，就是 Laravel 8 要準備發布了！但在本系列要使用的套件有部分還不支援 Laravel 8，因此我們還是用 Laravel 7 來建構 Lightning：
 
 ```bash
 composer create-project --prefer-dist "laravel/laravel:7.*" lightning
 ```
 
-安裝好之後，因為最後要把程式碼部署到 Heroku，不要讓編譯好的前端資源進 Git 版控，需要排除掉，編輯 `.gitignore`：
+因為最後要把程式碼部署到 Heroku，不要讓編譯好的前端資源進 Git 版控，需要將其排除掉：
+
+*.gitignore*
 
 ```
 /node_modules
@@ -47,7 +49,7 @@ DB_PASSWORD=[dm-password]
 FILESYSTEM_DRIVER=public
 ```
 
-然後跑 `php artisan storage:link`：
+然後新增本地 Storage 的公開連結：
 
 ```bash
 php artisan storage:link
@@ -61,9 +63,9 @@ php artisan storage:link
 indent_size = 2
 ```
 
-再來就是本地化的設定，在這一整個系列裡我會用繁體中文，所以要做一些相關設定。如果你不想要改也可以跳過此步驟。
+再來就是本地化的設定，在這一整個系列裡我會用繁體中文，所以要做一些相關設定。如果你不想要改也可以跳過此步驟：
 
-開啟 `config/app.php`：
+*config/app.php*
 
 ```php
     'timezone' => 'Asia/Taipei',
@@ -75,7 +77,7 @@ indent_size = 2
 
 `faker_locale` 是設定假文產生器的語言，但中文部分不完整，有些產生出來的還是英文，就將就著用吧！
 
-但現在網站還是英文的，因為少了中文的翻譯檔案，這裡我去 [Laravel-lang](https://github.com/Laravel-Lang/lang) 下載翻譯好的檔案。
+雖然設定了中文語系，但現在網站還是英文的，因為少了翻譯檔案，這裡我下載 [Laravel-lang](https://github.com/Laravel-Lang/lang) 翻譯好的檔案。
 
 最後我們要來安裝 Laravel 端的 Inertia 套件：
 
@@ -84,6 +86,8 @@ composer require inertiajs/inertia-laravel
 ```
 
 然後新增 SPA 的入口 `resources/views/app.blade.php`。`@inertia` 是 Blade 指令，會編譯成 `<div id="app" data-page="{...}"></div>` 來啟動 SPA：
+
+*resources/views/app.blade.php*
 
 ```blade
 <!DOCTYPE html>
@@ -102,11 +106,13 @@ composer require inertiajs/inertia-laravel
 </html>
 ```
 
+> 這裡的 `resources/views/app.blade.php` 是 Inertia 在 Laravel 預設的進入點，如果要自訂可以使用 `Inertia::setRootView()` 設定新的進入點。
+
 至此，後端就告一段落了。然後來準備前端的部分。
 
 ## 安裝 Vue.js & Inertia.js
 
-除了要裝 Vue.js & Inertia.js 之外，還有 `vue-meta` 是要來處理前端頁面的 Title、Meta 等，我個人習慣使用 Yarn，如果你用 NPM 只需替換掉就可以了：
+除了要裝 Vue.js & Inertia.js 之外，還有 `vue-meta` 是要來處理前端頁面的 Title、Meta 等，我個人習慣使用 Yarn，如果你用 NPM 只需替換掉指令就可以了：
 
 ```bash
 yarn add vue@^2.6 vue-meta@^2.4 vue-template-compiler@^2.6 \
@@ -115,7 +121,11 @@ yarn add vue@^2.6 vue-meta@^2.4 vue-template-compiler@^2.6 \
 
 > 雖然 Vue.js 3 已經到 Beta 版了，但它和 2 版的差異實在不小，且還有套件相容性等問題，在本系列還是使用 Vue.js 2。如果你想要體驗 Vue.js 3 請移駕 [重新認識 Vue.js - 008 天絕對看不完的 Vue.js 3.0 指南](https://book.vue.tw/)。
 
-然後是初始化前端應用的 `resources/js/app.js`。前端接到 **Inertia Page 物件** (`app.dataset.page`) 後，把它丟給 `InertiaApp` 的 `initialPage` 作為 SPA 啟動初始頁面的資料。另一個 `resolveComponent` 是設定要如何解析頁面組件，為了自動切分、按需加載每個頁面，這裡有使用到 [Dynamic import](https://github.com/tc39/proposal-dynamic-import)：
+然後是初始化前端應用的 `resources/js/app.js`。前端接到 **Inertia Page 物件** (`app.dataset.page`) 後，把它丟給 `InertiaApp` 的 `initialPage` 作為 SPA 啟動初始頁面的資料。另一個 `resolveComponent` 是設定要如何解析頁面組件，為了自動切分、按需加載每個頁面，這裡有使用到 [Dynamic import](https://github.com/tc39/proposal-dynamic-import)，需要安裝 `@babel/plugin-syntax-dynamic-import` 才能使用，不過 Laravel Mix 已經處理好了，所以可以直接使用：
+
+> 需要注意 Laravel Mix 4 在用 Dynamic import 會有個問題，就是不能在 Vue 單文件組件使用 style，如果你還是要用，只能降回 Laravel Mix 3。不過在此系列全程使用 Tailwind CSS，只會在 HTML 使用 Class 來調樣式，不會受到影響。
+
+*resources/js/app.js*
 
 ```js
 import Vue from 'vue'
@@ -141,7 +151,9 @@ new Vue({
 }).$mount(app)
 ```
 
-最後是在 `webpack.mix.js` 增加一點 Webpack 的設定：
+增加一點 Webpack 的設定：
+
+*webpack.mix.js*
 
 ```js
 const mix = require('laravel-mix')
@@ -170,10 +182,10 @@ mix
 
 ## 總結
 
-本篇把建構 Lightning 的第一步完成了，安裝前端和後端套件們和基本的設定。其實這一連串動作是可以包裝成 Preset 一行指令搞定，但為了可以了解 Inertia 我們還是一步一步自己操作吧！那什麼時候要 Hello world 呢？這個部分就留到下一篇吧！
+本篇把建構 Lightning 的第一步完成了，安裝前端和後端套件們和基本的設定。其實這一連串動作是可以包裝成 [Preset](https://usepreset.dev/) 一行指令搞定，但為了可以了解 Inertia 我們還是一步一步自己操作吧！那什麼時候要 Hello world 呢？這個部分就留到下一篇吧！
 
 ## 參考資料
 
-* [Server-side setup](https://inertiajs.com/server-side-setup)
-* [Client-side setup](https://inertiajs.com/client-side-setup)
-* [运行时 + 编译器 vs. 只包含运行时](https://cn.vuejs.org/v2/guide/installation.html#%E8%BF%90%E8%A1%8C%E6%97%B6-%E7%BC%96%E8%AF%91%E5%99%A8-vs-%E5%8F%AA%E5%8C%85%E5%90%AB%E8%BF%90%E8%A1%8C%E6%97%B6)
+* [Server-side setup - Inertia.js](https://inertiajs.com/server-side-setup)
+* [Client-side setup - Inertia.js](https://inertiajs.com/client-side-setup)
+* [运行时 + 编译器 vs. 只包含运行时 - 安装 — Vue.js](https://cn.vuejs.org/v2/guide/installation.html#%E8%BF%90%E8%A1%8C%E6%97%B6-%E7%BC%96%E8%AF%91%E5%99%A8-vs-%E5%8F%AA%E5%8C%85%E5%90%AB%E8%BF%90%E8%A1%8C%E6%97%B6)
