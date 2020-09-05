@@ -13,7 +13,6 @@ composer create-project --prefer-dist "laravel/laravel:7.*" lightning
 因為最後要把程式碼部署到 Heroku，不要讓編譯好的前端資源進 Git 版控，需要將其排除掉：
 
 *.gitignore*
-
 ```
 /node_modules
 /public/css
@@ -66,12 +65,11 @@ indent_size = 2
 再來就是本地化的設定，在這一整個系列裡我會用繁體中文，所以要做一些相關設定。如果你不想要改也可以跳過此步驟：
 
 *config/app.php*
-
 ```php
     'timezone' => 'Asia/Taipei',
-    // ...
+    ...
     'locale' => 'zh_TW',
-    // ...
+    ...
     'faker_locale' => 'zh_TW',
 ```
 
@@ -88,7 +86,6 @@ composer require inertiajs/inertia-laravel
 然後新增 SPA 的入口 `resources/views/app.blade.php`。`@inertia` 是 Blade 指令，會編譯成 `<div id="app" data-page="{...}"></div>` 來啟動 SPA：
 
 *resources/views/app.blade.php*
-
 ```html
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -124,7 +121,6 @@ yarn add vue@^2.6 vue-meta@^2.4 vue-template-compiler@^2.6 \
 然後是初始化前端應用，打開 `resources/js/app.js` 改成以下：
 
 *resources/js/app.js*
-
 ```js
 import Vue from 'vue'
 import VueMeta from 'vue-meta'
@@ -156,7 +152,6 @@ new Vue({
 然後還需要增加一點 Webpack 的設定：
 
 *webpack.mix.js*
-
 ```js
 const mix = require('laravel-mix')
 
