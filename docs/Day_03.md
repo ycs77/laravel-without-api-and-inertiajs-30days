@@ -37,7 +37,7 @@ git commit -m "Initial"
 ```
 APP_NAME=Lightning
 ...
-APP_URL=https://lightning.test
+APP_URL=http://lightning.test
 ...
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -77,7 +77,7 @@ indent_size = 2
 
 `faker_locale` 是設定假文產生器的語言，但中文部分不完整，有些產生出來的還是英文，就將就著用吧！
 
-雖然設定了中文語系，但現在網站還是英文的，因為少了翻譯檔案，這裡我下載 [Laravel-lang](https://github.com/Laravel-Lang/lang) 翻譯好的檔案。
+雖然設定了中文語系，但現在網站還是英文的，因為少了翻譯檔案，這裡我下載 [Laravel-lang](https://github.com/Laravel-Lang/lang) 翻譯好的檔案。把 Laravel-lang 中的 `src/zh_TW` 資料夾和 `json/zh_TW.json` 檔複製到 Lightning 專案的 `resources/lang` 下。
 
 最後我們要來安裝 Laravel 端的 Inertia 套件：
 
@@ -89,7 +89,7 @@ composer require inertiajs/inertia-laravel
 
 *resources/views/app.blade.php*
 
-```blade
+```html
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -112,18 +112,16 @@ composer require inertiajs/inertia-laravel
 
 ## 安裝 Vue.js & Inertia.js
 
-除了要裝 Vue.js & Inertia.js 之外，還有 `vue-meta` 是要來處理前端頁面的 Title、Meta 等，我個人習慣使用 Yarn，如果你用 NPM 只需替換掉指令就可以了：
+除了要裝 Vue.js & Inertia.js 之外，還有 Vue Meta 是要來處理前端頁面的 Title、Meta 等。安裝前端套件我個人習慣使用 Yarn，如果你用 NPM 只需替換掉指令就可以了：
 
 ```bash
 yarn add vue@^2.6 vue-meta@^2.4 vue-template-compiler@^2.6 \
   @inertiajs/inertia@^0.2 @inertiajs/inertia-vue@^0.2
 ```
 
-> 雖然 Vue.js 3 已經到 Beta 版了，但它和 2 版的差異實在不小，且還有套件相容性等問題，在本系列還是使用 Vue.js 2。如果你想要體驗 Vue.js 3 請移駕 [重新認識 Vue.js - 008 天絕對看不完的 Vue.js 3.0 指南](https://book.vue.tw/)。
+> 雖然 Vue.js 3 已經到 Beta 版了，但它和 2 版的差異實在不小，且還有套件相容性等問題，目前不考慮使用。在本系列還是使用 Vue.js 2。
 
-然後是初始化前端應用的 `resources/js/app.js`。前端接到 **Inertia Page 物件** (`app.dataset.page`) 後，把它丟給 `InertiaApp` 的 `initialPage` 作為 SPA 啟動初始頁面的資料。另一個 `resolveComponent` 是設定要如何解析頁面組件，為了自動切分、按需加載每個頁面，這裡有使用到 [Dynamic import](https://github.com/tc39/proposal-dynamic-import)，需要安裝 `@babel/plugin-syntax-dynamic-import` 才能使用，不過 Laravel Mix 已經處理好了，所以可以直接使用：
-
-> 需要注意 Laravel Mix 4 在用 Dynamic import 會有個問題，就是不能在 Vue 單文件組件使用 style，如果你還是要用，只能降回 Laravel Mix 3。不過在此系列全程使用 Tailwind CSS，只會在 HTML 使用 Class 來調樣式，不會受到影響。
+然後是初始化前端應用，打開 `resources/js/app.js` 改成以下：
 
 *resources/js/app.js*
 
@@ -151,7 +149,11 @@ new Vue({
 }).$mount(app)
 ```
 
-增加一點 Webpack 的設定：
+前端接到 **Inertia Page 物件** (`app.dataset.page`) 後，把它丟給 `InertiaApp` 的 `initialPage` 作為 SPA 啟動初始頁面的資料。另一個 `resolveComponent` 是設定要如何解析頁面組件，為了自動切分、按需加載每個頁面，這裡有使用到 [Dynamic import](https://github.com/tc39/proposal-dynamic-import)，要安裝 `@babel/plugin-syntax-dynamic-import` 才能使用。不過 Laravel Mix 已經幫我們裝好了，可以直接使用。
+
+> 需要注意 Laravel Mix 4 在用 Dynamic import 會有個問題，就是不能在 Vue 單文件組件使用 style，如果你還是要用，只能降回 Laravel Mix 3。不過在此系列全程使用 Tailwind CSS，只會在 HTML 使用 Class 來調樣式，不會受到影響。
+
+然後還需要增加一點 Webpack 的設定：
 
 *webpack.mix.js*
 
@@ -160,7 +162,7 @@ const mix = require('laravel-mix')
 
 mix
   .js('resources/js/app.js', 'public/js')
-  // ... CSS
+  .sass('resources/sass/app.scss', 'public/css')
   .webpackConfig({
     output: {
       chunkFilename: 'js/[name].js?id=[chunkhash]'
@@ -176,13 +178,17 @@ mix
   .version()
 ```
 
-這裡有設定了別名 `@`，對應到 `resources/js`，使用別名不需要再計算組件的相對路徑，所以你會看到上面有 `@/Pages/` 的路徑。另一個別名 `vue$` 是設定 Webpack 在打包時 Vue 時，使用運行時—不包含編譯器的版本，參考：[运行时 + 编译器 vs. 只包含运行时](https://cn.vuejs.org/v2/guide/installation.html#%E8%BF%90%E8%A1%8C%E6%97%B6-%E7%BC%96%E8%AF%91%E5%99%A8-vs-%E5%8F%AA%E5%8C%85%E5%90%AB%E8%BF%90%E8%A1%8C%E6%97%B6)。
+這裡有設定了別名 `@` 對應到 `resources/js`，所以上面的 `@/Pages/` 的路徑實際對應到 `resources/js/Pages/`。另一個別名 `vue$` 是設定 Webpack 在打包時 Vue 時，使用運行時版本 (不包含編譯器的版本)，參考：[运行时 + 编译器 vs. 只包含运行时](https://cn.vuejs.org/v2/guide/installation.html#%E8%BF%90%E8%A1%8C%E6%97%B6-%E7%BC%96%E8%AF%91%E5%99%A8-vs-%E5%8F%AA%E5%8C%85%E5%90%AB%E8%BF%90%E8%A1%8C%E6%97%B6)。
 
-最後跑上 `yarn dev` 就 OK 了！
+> 如果你眼尖會發現，剛才有裝 `vue-template-compiler` 這個套件，因為 Laravel Mix 需要，就這樣。(雖然不會用到...)
+
+先不用急著執行編譯 (`yarn dev`)，這是下篇的事情。
 
 ## 總結
 
-本篇把建構 Lightning 的第一步完成了，安裝前端和後端套件們和基本的設定。其實這一連串動作是可以包裝成 [Preset](https://usepreset.dev/) 一行指令搞定，但為了可以了解 Inertia 我們還是一步一步自己操作吧！那什麼時候要 Hello world 呢？這個部分就留到下一篇吧！
+本篇把建構 Lightning 的第一步完成了，安裝前端和後端套件們和基本的設定。其實這一連串動作是可以包裝成 [Preset](https://usepreset.dev/) 一行指令搞定，但為了可以了解 Inertia 我們還是一步一步自己操作。那什麼時候要 Hello world 呢？這個部分就留到下一篇吧！
+
+> Lightning 範例程式碼：https://github.com/ycs77/lightning
 
 ## 參考資料
 
