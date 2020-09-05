@@ -13,7 +13,7 @@ Route::get('/', function () {
 });
 ```
 
-PHP 7.4 後可以用 Arrow Functions (箭頭函數)，原本 3 行程式碼變 1 行。如果你偏好喜歡 Helper functions 也可以用：
+PHP 7.4 後可以用 Arrow Functions (箭頭函數)，原本 3 行程式碼變 1 行。如果你偏好喜歡 Helper functions 也可以使用：
 
 ```php
 Route::get('/', fn() => Inertia::render('HelloWorld'));
@@ -27,7 +27,7 @@ Route::get('/', fn() => inertia('HelloWorld'));
 Route::inertia('/', 'HelloWorld');
 ```
 
-前面 `app.js` 裡有用 ``import(`@/Pages/${name}`)`` 動態引入 ( Dynamic import)，Webpack 會先把 `Pages` 資料夾下所有頁面編譯好，然後根據傳入的頁面名稱 (`HelloWorld`) 渲染對應的頁面。所以我們需要新增 `resources/js/Pages` 資料夾和 `HelloWorld.vue`：
+這個 `HelloWorld` 就是視圖名稱。前面 `app.js` 裡有用 ``import(`@/Pages/${name}`)`` 動態引入 (Dynamic import)，編譯時 Webpack 會先把 `Pages` 資料夾下所有頁面包好，在瀏覽器執行時根據傳入的頁面名稱 (`HelloWorld`) 渲染對應的頁面。所以現在需要新增 `resources/js/Pages` 資料夾和 `HelloWorld.vue`：
 
 *resources/js/Pages/HelloWorld.vue*
 
@@ -45,9 +45,17 @@ export default {
 </script>
 ```
 
-<!--  -->
+然後編譯前端資源：
 
-看起來...沒什麼 Inertia 的感覺，再加一個頁面還有導覽連結好了：
+```bash
+yarn watch
+```
+
+開瀏覽器看一下結果：
+
+![](../images/day04-01.jpg)
+
+看起來...沒什麼 SPA 的感覺，再加一個頁面還有導覽連結好了：
 
 *routes/web.php*
 
@@ -99,11 +107,13 @@ export default {
 </script>
 ```
 
-這裡用到 `<inertia-link>` 組件來切換頁面，點擊 `<inertia-link>` 不會重新整理頁面，他會在背後送出 `Inertia 請求` 並自動替換 Vue 組件/頁面。
+點擊 `<inertia-link>` 組件來切換頁面，不會重新整理頁面，他會在背後送出 `Inertia 請求` 後自動切換頁面 (Vue 組件)。宛如 SPA 應用般...不對！這就是 SPA 應用：
 
-<!--  -->
+![](../images/day04-02.jpg)
 
-當然一定也要可以傳資料給前端，跟 Laravel 原本的用法一樣，傳個陣列過去就可以了：
+打開瀏覽器的 DevTools 檢查會發現，後端會回傳 **Inertia Page 物件** 給前端。
+
+當然後端一定也要可以傳資料給前端，跟 Laravel 原本的用法一樣，傳個陣列過去就可以了：
 
 *routes/web.php*
 
@@ -112,12 +122,12 @@ Route::get('/', fn() => Inertia::render('HelloWorld', [
     'name' => 'Lucas',
 ]));
 // 或
-Route::inertia('/', 'Page1', [
+Route::inertia('/', 'HelloWorld', [
     'name' => 'Lucas',
 ]);
 ```
 
-Vue 這邊用 `props` 接收：
+Vue 組件可以用 `props` 接收：
 
 *resources/js/Pages/HelloWorld.vue*
 
@@ -139,7 +149,7 @@ export default {
 </script>
 ```
 
-<!--  -->
+![](../images/day04-03.jpg)
 
 看！Inertia.js 開發 SPA 就是如此舒服！
 
@@ -162,7 +172,7 @@ X-Inertia-Version: 6b16b94d7c51cbe5b1fa42aac98241d5
 X-Inertia-Location: http://example.com/events/80
 ```
 
-在 Laravel Mix 要產生資產版本很簡單，有開啟 Laravel Mix 的 Version 功能後，`mix-manifest.json` 每次更新都會產生不同的 Hash 值，因此只要把 `mix-manifest.json` 丟給 PHP 的 `md5_file()` 函數產生 MD5 散列值，資產版本就出來了：
+在 Laravel Mix 要產生資產版本很簡單，有開啟 Laravel Mix 的 Version 功能後，`mix-manifest.json` 每次更新都會紀錄每個資源檔產生的 Hash 值，因此只要把 `mix-manifest.json` 丟給 PHP 的 `md5_file()` 函數產生 MD5 散列值，資產版本就出來了：
 
 *app/Providers/AppServiceProvider.php*
 
@@ -175,21 +185,23 @@ public function register()
 }
 ```
 
+然後到 `HelloWorld.vue` 隨便加幾個字，回到瀏覽器點 `<inertia-link>` 切換頁面，就會強制重新整理。
+
 ## 錯誤處理
 
-在完整的 SPA 中最常見的 Debug 方式，就是開瀏覽器 Devtools 的 Network 裡查 API 響應的結果，並不是很舒適。在 Inertia 如果有錯誤時會包裝在一個視窗內，而且還有原本後端提供漂亮的 Debug 介面。我們先回傳一個不存在的變數：
+在完整的 SPA 中最常見的 Debug 方式，就是開瀏覽器 DevTools 的 Network 裡查 API 響應的結果，Debug 很不舒服。在 Inertia 如果有錯誤時會包裝在一個視窗內，而且還有原本後端提供漂亮的 Debug 介面。我們先回傳一個不存在的變數：
 
 *routes/web.php*
 
 ```php
-Route::get('hello-inertiajs', fn() => $fail);
+Route::get('about', fn() => $fail);
 ```
 
-然後從首頁切換到 About 頁面：
+然後從首頁點連結切換到 About 頁面：
 
-<!--  -->
+![](../images/day04-04.jpg)
 
-果然還是習慣的最爽。但在線上環境 (production) 就不能暴露這些 Debug 資訊，因此我們來自訂 Inertia 專用的錯誤頁面：
+看到沒？可以用 Laravel 漂亮的 Debug 頁面，果然還是習慣的最爽。但在線上環境 (production) 就不能暴露這些 Debug 資訊，現在來自訂 Inertia 專用的錯誤頁面：
 
 *app/Exceptions/Handler.php*
 
@@ -226,7 +238,7 @@ public function render($request, Throwable $exception)
 }
 ```
 
-這段是判斷應用是不是在線上環境和錯誤的 HTTP 狀態碼是不是上面其中之一，若皆是就回傳自定義的錯誤頁面。
+這段是判斷應用是不是在線上環境，和錯誤的 HTTP 狀態碼是不是上面其中之一，若皆是就回傳自訂的錯誤頁面。
 
 *resources/js/Pages/Error.vue*
 
@@ -253,9 +265,9 @@ export default {
 </script>
 ```
 
-然後把 `APP_ENV` 暫時改成 `production` 後來測試看看：
+然後把 `APP_ENV` 暫時改成 `production` 和開啟剛才的 `$fail` 頁面，來看看自訂的錯誤頁面：
 
-<!--  -->
+![](../images/day04-05.jpg)
 
 搞定！
 
@@ -264,6 +276,8 @@ export default {
 ## 總結
 
 見識到了極度舒適的 SPA 開發流程後，下一步就是要讓頁面變漂亮啦！Tailwind CSS 登場！顛覆你以前使用 CSS 的方式！
+
+> Lightning 範例程式碼：https://github.com/ycs77/lightning
 
 ## 參考資料
 
