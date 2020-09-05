@@ -9,7 +9,7 @@
 3. [Day 03 初始化 Lightning - 安裝 Laravel & Vue.js & Inertia.js](docs/Day_03.md)
 4. [Day 04 Inertia.js 的 Hello world](docs/Day_04.md)
 5. [Day 05 安裝 Tailwind CSS](docs/Day_05.md)
-6. [Day 06 Iconify - 可以使用4萬個以上的 Icon 集合套件](docs/Day_06.md)
+6. [Day 06 Iconify 和 Heroicons](docs/Day_06.md)
 7. [Day 07 Layout 和組件](docs/Day_07.md)
 8. [Day 08 Lightning 用戶功能](docs/Day_08.md)
 9. [Day 09 Lightning 用戶登入](docs/Day_09.md)
