@@ -1,6 +1,6 @@
 # Day 04 Inertia.js 的 Hello world
 
-裝完 Laravel 後，我們就要開開心心地開始開發啦！首先第一步就是熟悉的 Laravel Router，把預設的 `Welcome` 視圖換成 Inertia 的視圖：
+裝完 Laravel 後，我們就要開開心心地開始開發啦！首先第一步就是熟悉的 Laravel Router，把預設的 `Welcome` 視圖換成 Inertia 的視圖 `HelloWorld`：
 
 *routes/web.php*
 ```php
@@ -26,7 +26,7 @@ Route::get('/', fn() => inertia('HelloWorld'));
 Route::inertia('/', 'HelloWorld');
 ```
 
-這個 `HelloWorld` 就是視圖名稱。前面 `app.js` 裡有用 ``import(`@/Pages/${name}`)`` 動態引入 (Dynamic import)，編譯時 Webpack 會先把 `Pages` 資料夾下所有頁面包好，在瀏覽器執行時根據傳入的頁面名稱 (`HelloWorld`) 渲染對應的頁面。所以現在需要新增 `resources/js/Pages` 資料夾和 `HelloWorld.vue`：
+前面 `app.js` 裡有用 ``import(`@/Pages/${name}`)`` 動態引入 (Dynamic import)，編譯時 Webpack 會先把 `Pages` 資料夾下所有頁面包好，在瀏覽器執行時根據傳入的頁面名稱 (`HelloWorld`) 渲染對應的頁面。所以現在需要新增 `resources/js/Pages` 資料夾和 `HelloWorld.vue`：
 
 *resources/js/Pages/HelloWorld.vue*
 ```vue
@@ -231,7 +231,7 @@ public function render($request, Throwable $exception)
 這段是判斷應用是不是在線上環境，和錯誤的 HTTP 狀態碼是不是上面其中之一，若皆是就回傳自訂的錯誤頁面。
 
 *resources/js/Pages/Error.vue*
-```php
+```vue
 <template>
   <div>
     <div>{{ code }}</div>
@@ -258,7 +258,7 @@ export default {
 
 ![](../images/day04-05.jpg)
 
-搞定！
+搞定！(別忘了把 `APP_ENV` 改回 `local`)
 
 最後記得瀏覽器要安裝 [Vue.js devtools](https://github.com/vuejs/vue-devtools)，因為前端依然還是用 Vue.js 開發，devtools 的使用方式依然不變，而且有優秀的 Debug 工具才能加速解決問題。
 
