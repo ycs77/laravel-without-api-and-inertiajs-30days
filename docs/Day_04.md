@@ -26,7 +26,9 @@ Route::get('/', fn() => inertia('HelloWorld'));
 Route::inertia('/', 'HelloWorld');
 ```
 
-前面 `app.js` 裡有用 ``import(`@/Pages/${name}`)`` 動態引入 (Dynamic import)，編譯時 Webpack 會先把 `Pages` 資料夾下所有頁面包好，在瀏覽器執行時根據傳入的頁面名稱 (`HelloWorld`) 渲染對應的頁面。所以現在需要新增 `resources/js/Pages` 資料夾和 `HelloWorld.vue`：
+現在來建立頁面資料夾 `resources/js/Pages` 和對應的 Vue 頁面 `HelloWorld.vue`：
+
+> 前面 `app.js` 裡有用 ``import(`@/Pages/${name}`)`` 動態引入 (Dynamic import)，編譯時 Webpack 會先把 `Pages` 資料夾下所有頁面包好，在瀏覽器執行時根據傳入的頁面名稱 (`HelloWorld`) 渲染對應的頁面。
 
 *resources/js/Pages/HelloWorld.vue*
 ```vue
