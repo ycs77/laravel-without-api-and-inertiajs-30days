@@ -255,6 +255,8 @@ Tailwind CSS 官方有維護一個 VSCode 的 [Tailwind CSS IntelliSense](https:
 
 ![](../images/day05-02.jpg)
 
+(別忘了把 `APP_ENV` 改回 `local`！)
+
 ## 總結
 
 恭喜你今天認識一個優秀的 CSS 框架 Tailwind CSS。如果你是前端 CSS 工程師或者你喜歡花時間刻 CSS，這套框架絕對可以用得很爽！同時也會是本系列使用的 CSS 框架，之後會了解到 Tailwind CSS 更多的用法。接下來我們要安裝 Icon 到 Lightning，距離正式開始開發功能不遠囉！下一篇再見！
