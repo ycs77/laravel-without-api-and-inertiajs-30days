@@ -1,6 +1,10 @@
 # Day 05 安裝 Tailwind CSS
 
-上一篇的範例因為沒有用 CSS 調教過，還不大能見人。本篇將來簡單介紹 Tailwind CSS 這個 Utility-First 的 CSS 框架。Tailwind CSS 預先把大部分常用的 CSS 屬性包裝成 class，像 `.px-6` 對應 `padding-left: 1.5rem; padding-right: 1.5rem`。很多人聽到這裡就會說，「這不就是寫 Inline CSS 嘛！」，完全不一樣。Tailwind CSS 可以在 HTML 完成 RWD、Hover、Focus 等估能，而且 class 名稱短很多且有規範，比 Inline CSS 強大多了。Tailwind CSS 最強大之處，莫過於完整的自訂系統。更詳細的介紹請務必看過這篇文章 [還在跟複雜的 CSS 的設定奮鬥嗎？用 Tailwind 來幫你實現真正的高效整潔！](https://5xruby.tw/posts/tailwind-css-plugin/) 和 Tailwind CSS 的 [官方文檔](https://tailwindcss.com/)。
+上一篇的範例因為沒有用 CSS 調教過，還不大能見人。本篇將來簡單介紹 Tailwind CSS 這個 Utility-First 的 CSS 框架。
+
+Tailwind CSS 預先把大部分常用的 CSS 屬性包裝成 class，像 `.px-6` 對應 `padding-left: 1.5rem; padding-right: 1.5rem`，這就是 Utility class。很多人聽到這裡就會說，「這不就是寫 Inline CSS 嘛！」，ㄝ... 完全不一樣喔！
+
+Tailwind CSS 可以在 HTML 完成 RWD、Hover、Focus 等功能，而且 class 名稱短很多且有規範，比 Inline CSS 強大多了。Tailwind CSS 最強大之處，莫過於完整的自訂系統。更詳細的介紹請務必看過這篇文章 [還在跟複雜的 CSS 的設定奮鬥嗎？用 Tailwind 來幫你實現真正的高效整潔！](https://5xruby.tw/posts/tailwind-css-plugin/) 和 Tailwind CSS 的 [官方文檔](https://tailwindcss.com/)。
 
 ## 安裝 Tailwind CSS
 
@@ -81,12 +85,12 @@ module.exports = {
 
 太複雜看不懂，解釋一下：
 
-* `purge` 是過濾 class 的設定，Tailwind CSS 產生了超無敵多的 class，絕大部分都不會用到，因此在 Build production 版的 CSS 時，會自動過濾掉沒使用到的 class。
-* `theme` 是要產生的 class 的設定，上面我有增加了 `container` 和 `fontFamily` 兩個設定。`fontFamily` 是設定在 `extend` 裡面，會繼承預設設定。
+* `purge` 是過濾 class 的設定，Tailwind CSS 產生了超無敵多的 class，絕大部分都不會用到，因此在 build production 版的 CSS 時，會自動過濾掉沒使用到的 class。
+* `theme` 是 Tailwind CSS 的樣式設定，可以自由調整產生出的顏色、尺寸、字型等。上面有增加了 `container` 和 `fontFamily` 兩個設定。`fontFamily` 是設定在 `extend` 裡面，其他未列出的部分會繼承預設設定。詳細的調整方式可以參考官網的 [Container](https://tailwindcss.com/docs/container) 和 [Font Family](https://tailwindcss.com/docs/font-family)。
 * `variants` 可以設定像 `hover`、`focus` 等，用法會像 `hover:text-red-500`、`focus:bg-purple-700`
-* `plugins` 註冊套件
+* `plugins` 註冊 Tailwind CSS 套件
 
-上面我增加了兩個新字型，還需要在 `app.blade.php` 裡引入字型檔：
+上面增加了兩個新字型，還需要在 `app.blade.php` 裡引入字型檔：
 
 *resources/views/app.blade.php*
 ```html
@@ -96,7 +100,7 @@ module.exports = {
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
 ```
 
-然後新增 CSS 的主要檔案。裡面會有 Tailwind CSS 的三個區塊 `base`、`components`、`utilities`。之後要增加 CSS 都必須放在正確的區塊內：
+然後新增 CSS 的主要檔案。裡面會有 Tailwind CSS 的三個區塊 `base`、`components`、`utilities`。之後要增加 CSS 都必須放在對應的區塊內：
 
 *resources/css/app.css*
 ```css
@@ -115,7 +119,7 @@ module.exports = {
 
 Tailwind CSS 除了在 HTML 寫 class 之外，也可以搬到 CSS 包成 class，現在我們來新增可以自己寫 CSS 的檔案 `base.css` 和 `components.css`。在 CSS 裡要使用 `@apply` 來調用 Tailwind CSS 的類別。
 
-自訂的基本 HTML 樣式：
+這裡可以自訂的基本 HTML 樣式。：
 
 *resources/css/base.css*
 ```css
@@ -124,7 +128,7 @@ button:focus {
 }
 ```
 
-自訂組件。之後有比較多的 class 會單獨抽到個別 CSS 檔案裡：
+這裡可以自訂組件。之後有比較多的 class 會單獨抽到個別 CSS 檔案裡。這裡新增了 `link` class，套用就會有連結的樣子。`text-purple-500` 是設定文字顏色，使用方式在 [Text Color](https://tailwindcss.com/docs/text-color)，但因為我們這次使用 Tailwind UI 的色板，新的色板需要參考 [Tailwind UI Updated color palette](https://tailwindui.com/documentation#how-tailwindcss-ui-extends-tailwind) (增加了 50 深淺值)。每個色板都有 50(淺) 到 900 (深)。`transition` 設定鼠標移過的過渡動畫：
 
 *resources/css/components.css*
 ```css
