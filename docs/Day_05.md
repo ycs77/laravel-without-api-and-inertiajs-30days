@@ -2,9 +2,9 @@
 
 上一篇的範例因為沒有用 CSS 調教過，還不大能見人。本篇將來簡單介紹 Tailwind CSS 這個 Utility-First 的 CSS 框架。
 
-Tailwind CSS 預先把大部分常用的 CSS 屬性包裝成 class，像 `.px-6` 對應 `padding-left: 1.5rem; padding-right: 1.5rem`，這就是 Utility class。很多人聽到這裡就會說，「這不就是寫 Inline CSS 嘛！」，ㄝ... 完全不一樣喔！
+Tailwind CSS 預先把大部分常用的 CSS 屬性包裝成 class，像 `.mb-2` 對應 `margin-bottom: 0.5rem`、`.px-6` 對應 `padding-left: 1.5rem; padding-right: 1.5rem`，這些就是 Utility class。很多人聽到這裡就會說，「這不就是寫 Inline CSS 嘛！」，ㄝ... 完全不一樣喔！
 
-Tailwind CSS 可以在 HTML 完成 RWD、Hover、Focus 等功能，而且 class 名稱短很多且有規範，比 Inline CSS 強大多了。Tailwind CSS 最強大之處，莫過於完整的自訂系統。更詳細的介紹請務必看過這篇文章 [還在跟複雜的 CSS 的設定奮鬥嗎？用 Tailwind 來幫你實現真正的高效整潔！](https://5xruby.tw/posts/tailwind-css-plugin/) 和 Tailwind CSS 的 [官方文檔](https://tailwindcss.com/)。
+Tailwind CSS 可以在 HTML 完成 RWD、Hover、Focus 等功能，而且 class 名稱短很多且有規範，比 Inline CSS 高尚多了。Tailwind CSS 最強大之處，莫過於完整的自訂系統。更詳細的介紹請務必看過這篇文章 [還在跟複雜的 CSS 的設定奮鬥嗎？用 Tailwind 來幫你實現真正的高效整潔！](https://5xruby.tw/posts/tailwind-css-plugin/) 和 Tailwind CSS 的 [官方文檔](https://tailwindcss.com/)。
 
 ## 安裝 Tailwind CSS
 
@@ -117,9 +117,9 @@ module.exports = {
 
 > 原本是可以用 `@tailwind` 來引入，但因為使用 `postcss-import` 的關係，需要改 `@import`。
 
-Tailwind CSS 除了在 HTML 寫 class 之外，也可以搬到 CSS 包成 class，現在我們來新增可以自己寫 CSS 的檔案 `base.css` 和 `components.css`。在 CSS 裡要使用 `@apply` 來調用 Tailwind CSS 的類別。
+Tailwind CSS 除了在 HTML 寫 class 之外，也可以搬到 CSS 包成 class，現在我們來新增可以自己寫 CSS 的檔案 `base.css` 和 `components.css`。
 
-這裡可以自訂的基本 HTML 樣式。：
+`base.css` 可以自訂的基本 HTML 樣式。在 CSS 裡要使用 `@apply` 來調用 Tailwind CSS 的類別：
 
 *resources/css/base.css*
 ```css
@@ -128,7 +128,7 @@ button:focus {
 }
 ```
 
-這裡可以自訂組件。之後有比較多的 class 會單獨抽到個別 CSS 檔案裡。這裡新增了 `link` class，套用就會有連結的樣子。`text-purple-500` 是設定文字顏色，使用方式在 [Text Color](https://tailwindcss.com/docs/text-color)，但因為我們這次使用 Tailwind UI 的色板，新的色板需要參考 [Tailwind UI Updated color palette](https://tailwindui.com/documentation#how-tailwindcss-ui-extends-tailwind) (增加了 50 深淺值)。每個色板都有 50(淺) 到 900 (深)。`transition` 設定鼠標移過的過渡動畫：
+`components.css` 可以自訂組件。之後有比較多的 class 會單獨抽到個別 CSS 檔案裡：
 
 *resources/css/components.css*
 ```css
@@ -140,6 +140,8 @@ button:focus {
   }
 }
 ```
+
+這裡新增了 `link` class，也就是連結的樣式。`text-purple-500` 是設定文字顏色，使用方式在 [Text Color](https://tailwindcss.com/docs/text-color)，但因為我們這次使用 Tailwind UI 的色板，新的色板需要參考 [Tailwind UI Updated color palette](https://tailwindui.com/documentation#how-tailwindcss-ui-extends-tailwind) (增加了 50 深淺值)。每個色板都有 50(淺) 到 900 (深)。`transition` 設定鼠標移過的過渡動畫
 
 記得在 `app.css` 裡引入 CSS：
 
