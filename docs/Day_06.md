@@ -20,15 +20,7 @@ const mix = require('laravel-mix')
 const PurgeIconsPlugin = require('purge-icons-webpack-plugin').default
 ...
   .webpackConfig({
-    output: {
-      chunkFilename: 'js/[name].js?id=[chunkhash]'
-    },
-    resolve: {
-      alias: {
-        vue$: 'vue/dist/vue.runtime.esm.js',
-        '@': path.resolve('resources/js')
-      }
-    },
+    ...
     plugins: [
       new PurgeIconsPlugin()
     ]
@@ -49,6 +41,16 @@ yarn add purge-icons-vue
 import PurgeIconsVue from 'purge-icons-vue'
 
 Vue.use(PurgeIconsVue)
+```
+
+引入樣式，記住要在 `tailwindcss/components` 之後、`tailwindcss/utilities` 之前：
+
+```css
+@import 'tailwindcss/components';
+...
+@import 'purge-icons-vue';
+
+@import 'tailwindcss/utilities';
 ```
 
 ## 使用 Icon
@@ -75,13 +77,19 @@ Heroicons 的 Icônes 傳送門：[Heroicons Solid](https://icones.netlify.app/c
 
 用 Tailwind CSS 就可以快速隨心所欲地調整 icon 的樣式。
 
+![](../images/day06-01.jpg)
+
 ## VSCode 套件
 
 Iconify 也有 VSCode 的提示套件 [Iconify IntelliSens](https://marketplace.visualstudio.com/items?itemName=antfu.iconify)，例如輸入 `heroicons-outline:` 會提示 HeroIcons Outline 可以用的 icon。
 
-## 結語
+![](../images/iconify-intelliSense-preview.png)
+
+## 總結
 
 雖然本篇比較短，但 icon 也是我們網站中十分重要的一個元素，讓網頁畫面變得比較鮮活。Icônes 這個工具也讓使用 icon 變的十分簡單。下一篇會來講 Layout 和組件，正篇終於要開始囉！
+
+> Lightning 範例程式碼：https://github.com/ycs77/lightning
 
 ## 參考資料
 
