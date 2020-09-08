@@ -278,9 +278,11 @@ export default {
 
 前端 Layout 讓網頁至少有點樣子了 (哈哈)。
 
-## 結語
+## 總結
 
 從本篇正式開始用程式碼灌水...不對，是從本篇正式開始開發 Lightning。起步是 Layout。再來就是用戶登入/註冊的部分了，Inertia.js 要準備開始發威囉！
+
+> Lightning 範例程式碼：https://github.com/ycs77/lightning
 
 ## 參考資料
 
