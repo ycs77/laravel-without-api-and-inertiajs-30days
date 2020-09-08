@@ -280,7 +280,7 @@ export default {
 
 ## 總結
 
-從本篇正式開始用程式碼灌水...不對，是從本篇正式開始開發 Lightning。起步是 Layout。再來就是用戶登入/註冊的部分了，Inertia.js 要準備開始發威囉！
+從本篇正式開始~~用程式碼灌水~~開發 Lightning。下一篇開始就是用戶的部分，整個應用中最基本的功能，繼續加油！
 
 > Lightning 範例程式碼：https://github.com/ycs77/lightning
 
