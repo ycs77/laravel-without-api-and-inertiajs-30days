@@ -8,11 +8,9 @@
 
 ## 共享資料
 
-導覽列中的標題需要由後端提供，但如果都在每個頁面注入標題那也太難管理。此時 **共享資料** 派上用場！鏘鏘！使用 `Inertia::share()` 分享資料給所有的 Inertia 視圖 (類似 Laravel 的 `View::share()`)，然後用 `this.$page.{variable}` 讀取。
+導覽列中的標題需要由後端提供，但如果都在每個頁面注入標題那也太難管理。鏘鏘！此時 **共享資料** 派上用場！使用 `Inertia::share()` 分享資料給所有的 Inertia 視圖 (類似 Laravel 的 `View::share()`)，然後用 `this.$page.{variable}` 讀取。
 
 之後會在 `AppServiceProvider` 加比較多東西，為了可以好管理，我們先把 Inertia 相關的東西抽出到 `registerInertia()` 裡：
-
-> 前面在設定 `.env` 檔時有把 `APP_NAME` 設為 Lightning，`config('app.name')` 會讀到這個變數。
 
 *app/Providers/AppServiceProvider.php*
 ```php
@@ -31,19 +29,9 @@ protected function registerInertia()
 }
 ```
 
-等下前端就可以用 `this.$page.title` 取得標題了。`Inertia::share()` 的其他用法在這，先看過有印象。之後會介紹用法，先不用擔心：
+> 前面在設定 `.env` 檔時有把 `APP_NAME` 設為 Lightning，`config('app.name')` 會讀到這個變數。
 
-```php
-// 單行
-Inertia::share('title', config('app.name'));
-
-// 延遲載入
-Inertia::share([
-    'title' => fn() => config('app.name'),
-]);
-```
-
-然後就可以去前端刻板囉！
+然後前端就可以用 `this.$page.title` 取得標題了。馬上去刻板囉！
 
 ## Layout
 
@@ -59,7 +47,7 @@ Inertia::share([
       <div class="container flex items-center justify-between h-16 md:h-20">
         <h1>
           <inertia-link href="/" class="block text-2xl font-light italic tracking-wider md:text-3xl">
-            <span class="iconify text-purple-500 w-6 h-6 md:w-8 md:h-8" data-icon="heroicons-solid:lightning-bolt"></span>
+            <icon class="text-purple-500 w-6 h-6 md:w-8 md:h-8" icon="heroicons-solid:lightning-bolt" />
             <span>{{ $page.title }}</span>
           </inertia-link>
         </h1>
@@ -94,7 +82,7 @@ export default {
 </script>
 ```
 
-回到之前的 `HelloWorld.vue`，要套用只需要在 `layout` 屬性設定你要套用的 Layout 就可以囉：
+回到之前的 `HelloWorld.vue`，在 `layout` 屬性設定要套用的 Layout：
 
 *resources/js/Pages/HelloWorld.vue*
 ```vue
@@ -114,7 +102,7 @@ export default {
 
 ## 建立下拉選單組件
 
-剛才那個是還沒登入的樣子，登入後我想要有用戶的頭像按鈕，點擊後跳出下拉式選單，有文章、設定、登出等按鈕，所以先做一個拉式選單組件。一樣先開 `Components` 資料夾和 `Dropdown.vue`：
+剛才那個是還沒登入的樣子，登入後在導覽列右上角我想要有用戶的頭像按鈕，點擊後跳出下拉式選單，有文章、設定、登出等按鈕，所以先做一個拉式選單組件。一樣先開 `Components` 資料夾和 `Dropdown.vue`：
 
 *resources/js/Components/Dropdown.vue*
 ```vue
@@ -168,7 +156,7 @@ export default {
 </script>
 ```
 
-這個組件有用到 slot (插槽)，上面的 button slot 可以自訂下拉式選單上方的按鈕，下面 menu slot 是選單的按鈕區塊。包了一層 `<transition>` 讓選單有個簡單的過渡動畫。中間的 `<button>` 其實是一個全屏的透明層，在下拉式選單出現時墊在下面，只要點擊這一層就觸發關閉選單，於是一個簡單的下拉式選單組件就完成了！
+這個組件有用到 slot (插槽)，上面的 button slot 可以自訂下拉式選單上方的按鈕，下面 menu slot 是選單的按鈕區塊。包了一層 `<transition>` 讓選單有個簡單的過渡動畫。中間的 `<button>` 其實是一個全屏的透明層，在下拉式選單出現時墊在下面，選單開啟時只要點擊背景空白處(透明層)就可以關閉選單，於是一個簡單的下拉式選單組件就完成了！
 
 > 了解 [插槽 — Vue.js 文檔](https://cn.vuejs.org/v2/guide/components-slots.html)
 
@@ -179,7 +167,7 @@ export default {
 <template>
   <inertia-link :href="href" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 focus:bg-gray-100" v-on="$listeners">
     <template v-if="icon">
-      <span class="iconify mr-2" :data-icon="icon"></span>
+      <icon class="mr-2" :icon="icon" />
       <slot />
     </template>
     <slot v-else />
@@ -199,11 +187,11 @@ export default {
 </script>
 ```
 
-組件好了之後就可以引進 `AppLayout`，這樣外部我們只需要關注頭像按鈕，和設定需要的選單按鈕就可以了。把剛才的登入/註冊按鈕先註解起來：
+組件好了之後就可以引進 `AppLayout`，這樣外部我們只需要關注頭像按鈕，和設定需要的選單按鈕就可以了。把剛才的登入/註冊按鈕先註解起來，模擬已登入狀態：
 
 > `#` 是 `v-slot` 的別名，參考：[具名插槽的缩写](https://cn.vuejs.org/v2/guide/components-slots.html#%E5%85%B7%E5%90%8D%E6%8F%92%E6%A7%BD%E7%9A%84%E7%BC%A9%E5%86%99)
 
-> 實際開發組件流程不會是這麼簡單。我個人的作法是在頁面先刻好，根據複雜度/使用頻繁度來決定，是否將其抽成組件或 class。如果要有系統的開發完整的組件庫，建議試試看 [Storybook](https://storybook.js.org/) (聽說很厲害，但我還沒試過XD)。
+> 實際開發組件流程不會是這麼簡單。我個人的作法是在頁面先刻好，根據複雜度/使用頻繁度來決定，是否將其抽成組件或 CSS class。如果要有系統的開發完整的組件庫，建議試試看 [Storybook](https://storybook.js.org/)。
 
 *resources/js/Layouts/AppLayout.vue*
 ```vue
@@ -258,13 +246,13 @@ export default {
 </script>
 ```
 
-但總不能用這種方式來切換吧...，這裡個別用 `<template>` 包起來，然後就可以根據變數來切換顯示內容：
+但總不能都用註解來切換吧...，這裡將兩組登入前後需要的元件，個別用 `<template>` 包起來，然後就可以根據變數來切換顯示內容：
 
 *resources/js/Layouts/AppLayout.vue*
 ```html
 <nav>
   <ul class="flex text-sm md:text-base space-x-1 md:space-x-4 items-center">
-    <template v-if="true">
+    <template v-if="false">
       ...
     </template>
     <template v-else>
@@ -280,7 +268,7 @@ export default {
 
 ## 總結
 
-從本篇正式開始~~用程式碼灌水~~開發 Lightning。下一篇開始就是用戶的部分，整個應用中最基本的功能，繼續加油！
+從本篇正式開始開發 Lightning (~~和用程式碼灌水~~)。下一篇開始就是用戶的部分，整個應用中最基本的功能，繼續加油！
 
 > Lightning 範例程式碼：https://github.com/ycs77/lightning
 
