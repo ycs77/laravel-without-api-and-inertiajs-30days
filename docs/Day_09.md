@@ -1,61 +1,6 @@
 # Day 09 Lightning 用戶登入
 
-> 小提醒：本篇長度為往常的2倍，請酌情閱讀。
-
-調好了用戶 Model，現在可以來做登入/登出了。後端直接拿 Laravel UI 現成的登入邏輯，但前端就需要做比較多事情...，像用 Tailwind CSS 調表單樣式、增加組件等。不管，先上再說！
-
-## Laravel UI 套件
-
-畢竟一開始決定了用 Laravel 7...，還是乖乖先用 Laravel UI 吧：
-
-```bash
-composer require laravel/ui
-```
-
-原本 Laravel UI 附的視圖不需要，我們只要後端的 Controllers：
-
-```bash
-php artisan ui:controllers
-```
-
-雖然提供了滿多功能的，但我這次只打算做登入和註冊，留下 `LoginController` 和 `RegisterController`，其他扔掉。既然要用我們的視圖，那就要註冊進去。覆蓋原本的 `showLoginForm()` 回傳我們的 Inertia 視圖：
-
-*app/Http/Controllers/Auth/LoginController.php*
-```php
-use Inertia\Inertia;
-
-public function showLoginForm()
-{
-    return Inertia::render('Auth/Login');
-}
-```
-
-註冊登入的路由，把不用的忘記密碼功能先關掉 (如果你要做也是可以啦...)：
-
-*routes/web.php*
-```php
-Auth::routes(['reset' => false]);
-```
-
-然後改一下登入成功跳轉的頁面：
-
-*app/Providers/RouteServiceProvider.php*
-```php
-public const HOME = '/';
-```
-
-暫時先把狀態先調成未登入的狀態，有登入跟註冊兩個按鈕：
-
-*resources/js/Layouts/AppLayout.vue*
-```vue
-<template>
-  ...
-            <template v-if="true">
-              ...
-            </template>
-  ...
-</template>
-```
+調好了用戶 Model，現在可以來做登入/登出了。上篇已經在後端安裝 Laravel UI 有了現成的登入邏輯，但前端就需要做比較多事情...，像用 Tailwind CSS 調表單樣式、增加組件等。不管，先上再說！
 
 ## 登入頁面
 
@@ -309,7 +254,30 @@ module.exports = {
 }
 ```
 
-CSS 搞定後要傳帳號資料給後端驗證和登入。Inertia.js 傳資料很簡單，用法跟 Axios 差不多 (可以用 `put`、`patch`、`delete` 等方法)：
+CSS 搞定後要傳帳號資料給後端驗證和登入。
+
+Inertia.js 傳資料很簡單，呼叫 `this.$inertia.post('/path/to', data)`，用法跟 Axios 差不多，也可以用 `put`、`patch`、`delete` 等方法：
+
+> 詳細用法：[Requests - Inertia.js](https://inertiajs.com/requests)
+
+```vue
+<script>
+export default {
+  data() {
+    return {
+      form: { ... }
+    }
+  },
+  methods: {
+    submit() {
+      this.$inertia.post('/path/to', this.form)
+    }
+  }
+}
+</script>
+```
+
+套用到登入就是這樣：
 
 *resources/js/Pages/Auth/Login.vue*
 ```vue
@@ -346,75 +314,15 @@ public function registerInertia()
     Inertia::share([
         ...
         'auth' => fn() => [
-            'user' => Auth::user() ? [
-                'id' => Auth::user()->id,
-                'name' => Auth::user()->name,
-                'email' => Auth::user()->email,
-                'description' => Auth::user()->description,
-                'avatar' => Auth::user()->avatar,
-            ] : null,
+            'user' => Auth::user(),
         ],
     ]);
 }
 ```
-
-然後前端就可以用 `this.$page.auth.user` 取得用戶資料。
 
 > `auth` 裡面有包一層 Function，這個是 [延遲載入 (Lazy evaluation)](https://inertiajs.com/responses#lazy-evaluation) 功能，之後的篇章會解釋。
 
-這裡說一下，用戶的頭像會有可能是完整的 URL，或只有後面的 Path，需要有個 Function 可以統一輸出完整的 URL。先新增 `app/Utils/helpers.php` 和 `storage_url()`：
-
-*app/Utils/helpers.php*
-```php
-use Illuminate\Support\Facades\Storage;
-
-function storage_url(string $path = null): ?string
-{
-    if (! $path) {
-        return null;
-    }
-
-    return filter_var($path, FILTER_VALIDATE_URL)
-        ? $path
-        : Storage::url($path);
-}
-```
-
-還要在 `composer.json` 裡註冊，讓 Composer 自動引入：
-
-*composer.json*
-```json
-{
-    "autoload": {
-        ...
-        "files": [
-            "app/Utils/helpers.php"
-        ]
-    }
-}
-```
-
-和跑 `composer dump-autoload`。
-
-把用戶頭像套用 `storage_url()`：
-
-*app/Providers/AppServiceProvider.php*
-```php
-public function registerInertia()
-{
-    Inertia::share([
-        ...
-        'auth' => fn() => [
-            'user' => Auth::user() ? [
-                ...
-                'avatar' => storage_url(Auth::user()->avatar),
-            ] : null,
-        ],
-    ]);
-}
-```
-
-回到前端串資料，把 `user` 替換成後端傳的資料，打掉 `data`，用 `computed` 確保可以取得最新的用戶資料。這裡看不懂的應該有 `this.$page.auth?.user` 裡的 `?.` 這個用法，這是 JavaScript 的一個新特性 [Optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining)，等同 `this.$page.auth && this.$page.auth.user`：
+然後前端就可以取得用戶資料了，把 `user` 替換成後端傳的資料，打掉 `data`，用 `computed` 確保可以取得最新的用戶資料。這裡看不懂的應該有 `this.$page.auth?.user` 裡的 `?.` 這個用法，這是 JavaScript 的一個新特性 [Optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining)，等同 `this.$page.auth && this.$page.auth.user`：
 
 *resources/js/Layouts/AppLayout.vue*
 ```vue
@@ -438,7 +346,7 @@ export default {
 </script>
 ```
 
-現在前端就可以顯示當前用戶的資料了：
+現在前端就可以正常顯示當前用戶的資料了：
 
 ![](../images/day09-05.jpg)
 
@@ -577,10 +485,11 @@ Inertia.js 整合了 [NProgress](https://ricostacruz.com/nprogress/)，頁面載
 
 ## 總結
 
-跟之前比，本篇真的......很長，不過也表示 Lightning 多了一些功能，離部署之日也進了一步。下一篇會來處裡 Presenter，自己的資料自己掌控！
+跟之前比，本篇真的......很長，不過也表示 Lightning 多了一些功能，離部署之日也進了一步。下一篇會增加 Presenter 層，自己的資料自己掌控！
 
 > Lightning 範例程式碼：https://github.com/ycs77/lightning
 
 ## 參考資料
 
+* [Requests - Inertia.js](https://inertiajs.com/requests)
 * [PingCRM](https://github.com/inertiajs/pingcrm)
