@@ -46,7 +46,7 @@ protected function registerInertia()
     <header class="bg-white shadow">
       <div class="container flex items-center justify-between h-16 md:h-20">
         <h1>
-          <inertia-link href="/" class="block text-2xl font-light italic tracking-wider md:text-3xl">
+          <inertia-link href="/" class="block text-2xl font-light italic md:text-3xl">
             <icon class="text-purple-500 w-6 h-6 md:w-8 md:h-8" icon="heroicons-solid:lightning-bolt" />
             <span>{{ $page.title }}</span>
           </inertia-link>
