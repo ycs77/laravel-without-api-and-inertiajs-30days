@@ -21,7 +21,7 @@ public function register()
 
 protected function registerInertia()
 {
-    Inertia::version(fn() => md5_file(public_path('mix-manifest.json')));
+    Inertia::version(fn () => md5_file(public_path('mix-manifest.json')));
 
     Inertia::share([
         'title' => config('app.name'),

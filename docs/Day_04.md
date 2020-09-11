@@ -15,9 +15,9 @@ Route::get('/', function () {
 PHP 7.4 後可以用 Arrow Functions (箭頭函數)，原本 3 行程式碼變 1 行。如果你偏好喜歡 Helper functions 也可以使用：
 
 ```php
-Route::get('/', fn() => Inertia::render('HelloWorld'));
+Route::get('/', fn () => Inertia::render('HelloWorld'));
 // 或
-Route::get('/', fn() => inertia('HelloWorld'));
+Route::get('/', fn () => inertia('HelloWorld'));
 ```
 
 還是嫌太長？沒關係，Laravel 可以定義直接輸出視圖的路由 `Route::view()`，Inertia 自然也可以：
@@ -114,7 +114,7 @@ export default {
 
 *routes/web.php*
 ```php
-Route::get('/', fn() => Inertia::render('HelloWorld', [
+Route::get('/', fn () => Inertia::render('HelloWorld', [
     'name' => 'Lucas',
 ]));
 // 或
@@ -175,7 +175,7 @@ use Inertia\Inertia;
 
 public function register()
 {
-    Inertia::version(fn() => md5_file(public_path('mix-manifest.json')));
+    Inertia::version(fn () => md5_file(public_path('mix-manifest.json')));
 }
 ```
 
@@ -187,7 +187,7 @@ public function register()
 
 *routes/web.php*
 ```php
-Route::get('about', fn() => $fail);
+Route::get('about', fn () => $fail);
 ```
 
 然後從首頁點連結切換到 About 頁面：

@@ -313,7 +313,7 @@ public function registerInertia()
 {
     Inertia::share([
         ...
-        'auth' => fn() => [
+        'auth' => fn () => [
             'user' => Auth::user(),
         ],
     ]);
