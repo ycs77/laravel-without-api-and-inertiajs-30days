@@ -37,7 +37,7 @@ class UserPresenter extends FlexiblePresenter
 
 ## 套用 Presenter
 
-如果是單個 Model 可以用 `UserPresenter::make()`，集合 (Collection) 則用 `UserPresenter::collection()`，分頁也可以用：
+如果是單個 Model 可以用 `UserPresenter::make()`，集合 (Collection) 則用 `UserPresenter::collection()`，分頁也可以丟進去：
 
 ```php
 use App\Presenters\UserPresenter;
