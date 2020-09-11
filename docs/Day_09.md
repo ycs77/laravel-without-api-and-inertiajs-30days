@@ -4,7 +4,7 @@
 
 ## 登入頁面
 
-用戶登入在前端的部分要處裡的比較多，登入頁面表單、文字輸入框組件、表單樣式... 等，一個一個來。先是登入頁面 `Auth/Login`：
+先是登入頁面 `Auth/Login`：
 
 *resources/js/Pages/Auth/Login.vue*
 ```vue
@@ -198,7 +198,7 @@ module.exports = {
 ...
 ```
 
-看看改得如何：
+看看改得如何~~：
 
 ![](../images/day09-02.jpg)
 
@@ -295,7 +295,7 @@ export default {
 </script>
 ```
 
-基本這樣就可以登入了，把前面新增的帳密輸入進去並送出。
+基本這樣就可以登入了，把前面新增的帳密輸入進去並送出：
 
 ![](../images/day09-03.jpg)
 
@@ -303,7 +303,7 @@ export default {
 
 ## 顯示登入用戶資訊
 
-當然登入後看起來沒啥變化，因為前端還不知道目前登入用戶的資料，回到 `AppServiceProvider` 補上：
+當然登入後看起來沒啥變化，因為前端還不知道目前有登入用戶，回到 `AppServiceProvider` 補上登入用戶的資料：
 
 *app/Providers/AppServiceProvider.php*
 ```php
@@ -352,7 +352,9 @@ export default {
 
 ## 登出
 
-登出也很簡單，後端登出的路由是 post 到 `/logout`，把 `<inertia-link>` 的 method 改成 `post` 就可以了，但要先增加 `DropdownItem` 的 Props：
+後端登出的路由是 post 到 `/logout`，這時候第一個想到用剛才的 `this.$inertia.post()` 做登出。其實這裡可以直接用 `<inertia-link>`，`method` 改成 `post` 就可以了。
+
+要先增加 `DropdownItem` 的 `method` Prop (把 `method` 傳給裡面 `<inertia-link>` 的 `method`)：
 
 *resources/js/Components/DropdownItem.vue*
 ```vue
@@ -401,7 +403,7 @@ composer require inertiajs/inertia-laravel:^0.2.9
 <text-input v-model="form.email" :error="$page.errors.email" label="E-mail" autocomplete="email" ref="emailInput" />
 ```
 
-調整一下文字輸入框：
+在文字輸入框裡增加錯誤訊息：
 
 *resources/js/Components/TextInput.vue*
 ```vue
@@ -446,9 +448,9 @@ export default {
 
 ![](../images/day09-06.jpg)
 
-## 解決記住我始終為 True 問題
+## 解決「記住我」始終為 True 問題
 
-原本後端在讀「記住我」的值是用 `$request->filled('remember')`，判斷存在且不為空，可是用 XHR 傳過去是 Boolean 值，不管 `true` 或 `false` 都會回傳 `true` (存在)，需要修正一下此s問題：
+原本後端在讀「記住我」的值是用 `$request->filled('remember')`，判斷存在且不為空，可是用 XHR 傳過去是 Boolean 值，不管 `true` 或 `false` 都會回傳 `true` (存在)，需要修正一下此問題：
 
 *app/Http/Controllers/Auth/LoginController.php*
 ```php
@@ -464,7 +466,7 @@ protected function attemptLogin(Request $request)
 
 ## 載入進度條
 
-Inertia.js 整合了 [NProgress](https://ricostacruz.com/nprogress/)，頁面載入時頂部有那條細長的進度條。Inertia.js 還設定讓它在頁面載入超過 250 毫秒時才顯示，且預設不載入 CSS，所以才看不到。那就讓我們自己來調吧：
+Inertia.js 整合了 [NProgress](https://ricostacruz.com/nprogress/)，頁面載入時頂部有那條細長的進度條。Inertia.js 還設定讓它在頁面載入超過 250 毫秒時才顯示。但預設不載入 CSS，所以才看不到。那就讓我們自己來調吧：
 
 *resources/css/components.css*
 ```css
@@ -482,6 +484,8 @@ Inertia.js 整合了 [NProgress](https://ricostacruz.com/nprogress/)，頁面載
 ![](../images/day09-07.jpg)
 
 進度條出現~~
+
+如果你電腦太好、本地跑太快都看不到進度條，但又很想看進度條跑過去的樣子，可以新增 `Middleware`，裡面加一個 `sleep(1)` 就可以囉！
 
 ## 總結
 
