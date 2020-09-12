@@ -1,6 +1,6 @@
 # Day 10 Inertia.js 和 Presenter - Flexible Presenter
 
-有做過 API 應該都知道，要有 Presenter 層管資料呈現。Laravel 其實已經內建有 [Resource](https://laravel.com/docs/eloquent-resources) 了。不過有個更適合 (我認為) Inertia.js 的 Presenter 套件 - [Flexible Presenter](https://github.com/AdditionApps/flexible-presenter)，本系列會用它來做 Eloquent 的資料轉換，管理前端可以接收的資料。
+有做過 API 應該都知道，要有 Presenter 層管資料呈現。Laravel 其實已經內建有 [Resource](https://laravel.com/docs/eloquent-resources) 了。不過有個 (我認為) 更適合 Inertia.js 的 Presenter 套件 - [Flexible Presenter](https://github.com/AdditionApps/flexible-presenter)，本系列會用它來做 Eloquent 的資料轉換，管理前端可以接收的資料。
 
 ## 安裝
 
@@ -62,7 +62,7 @@ protected function registerInertia()
 {
     Inertia::share([
         ...
-        'auth' => fn() => [
+        'auth' => fn () => [
             'user' => UserPresenter::make(Auth::user())->get(),
         ],
     ]);
