@@ -33,4 +33,4 @@
 27. [Day 27 部署 Lightning 到 Heroku](docs/Day_27.md)
 28. [Day 28 串接 Cloudinary (媒體存儲服務)](docs/Day_28.md)
 29. [Day 29 用 Depictr 做 SSR，解決 Inertia.js 的 SEO 問題](docs/Day_29.md)
-30. [Day 30 Inertia.js 30天總結](docs/Day_30.md)
+30. [Day 30 請問您今天要來點全端技能嗎？](docs/Day_30.md)
