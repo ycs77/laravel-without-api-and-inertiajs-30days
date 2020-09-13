@@ -1,5 +1,7 @@
 # Day 11 Lightning 用戶註冊
 
+註冊基本上和登入差不多，我們要做的註冊頁面裡也只需要增加一點欄位。
+
 ## 註冊頁面
 
 跟登入一樣，到 `RegisterController` 中替換掉註冊頁面：
@@ -13,6 +15,8 @@ public function showRegistrationForm()
     return Inertia::render('Auth/Register');
 }
 ```
+
+> 如果你有不同的登入、註冊需求，都是可以透過修改 `LoginController`、`RegisterController` 來完成，參考它們用的 Trait 了解 Laravel 背後如何實作功能。
 
 還有用 `Login.vue` 修改過的 `Register.vue`：
 
@@ -75,9 +79,9 @@ export default {
 </script>
 ```
 
-![](../images/day11-01.jpg)
+然後來測試看看註冊一個新帳號：
 
-ㄝ...沒了？對，就這樣。
+![](../images/day11-01.jpg)
 
 ## 總結
 
