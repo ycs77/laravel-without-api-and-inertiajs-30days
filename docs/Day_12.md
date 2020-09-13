@@ -2,14 +2,13 @@
 
 ## 路由
 
-首先先開3個路由，頁面、更新、刪除用戶：
+首先先開2個路由，顯示頁面和更新用戶：
 
 *routes/web.php*
 ```php
 // User
 Route::get('user/setting', 'User\UserController@edit');
 Route::put('user', 'User\UserController@update');
-Route::delete('user', 'User\UserController@destroy');
 ```
 
 ## 帳號設定頁面
@@ -309,7 +308,7 @@ protected function registerInertia()
 }
 ```
 
-先新增一個 `Alert` 組件：
+新增一個 `Alert` 組件，這就是提示訊息用的組件：
 
 *resources/js/Components/Alert.vue*
 ```vue
@@ -381,93 +380,8 @@ export default {
 
 ![](../images/day12-03.jpg)
 
-## 刪除帳號
-
-最後是刪除帳號：
-
-*app/Http/Controllers/User/UserController.php*
-```php
-use Illuminate\Support\Facades\Auth;
-
-public function destroy()
-{
-    $user = $this->user();
-
-    Auth::logout();
-
-    $user->delete();
-
-    return redirect('/')->with('success', '帳號刪除成功');
-}
-```
-
-還有刪除的按鈕：
-
-*resources/js/Pages/User/Edit.vue*
-```vue
-<template>
-  <div class="py-6 md:py-8">
-    ...
-    <form @submit.prevent="destroy" class="card card-main mt-6">
-      <h1 class="text-3xl font-semibold text-center">刪除帳號</h1>
-      <div class="w-12 mt-1 mx-auto border-b-4 border-red-400"></div>
-
-      <div class="grid gap-6 mt-6 md:grid-cols-2">
-        <div class="md:col-span-2">
-          <loading-button :loading="destroyLoading" class="btn btn-red">刪除帳號</loading-button>
-        </div>
-      </div>
-    </form>
-  </div>
-</template>
-
-<script>
-export default {
-  data() {
-    return {
-      ...
-      destroyLoading: false
-    }
-  },
-  methods: {
-    ...
-    destroy() {
-      if (confirm('確定要刪除當前帳號? 所有文章將會被刪除，且此操作不可恢復!')) {
-        this.destroyLoading = true
-        this.$inertia.delete('/user').then(() => this.destroyLoading = false)
-      }
-    }
-  }
-}
-</script>
-```
-
-*resources/js/Pages/HelloWorld.vue*
-```vue
-<template>
-  <div class="container py-8">
-    <alert v-if="$page.flash.success" class="mb-4">{{ $page.flash.success }}</alert>
-    ...
-  </div>
-</template>
-
-<script>
-import Alert from '@/Components/Alert'
-
-export default {
-  components: {
-    Alert
-  }
-}
-</script>
-```
-
-![](../images/day12-04.jpg)
-
-![](../images/day12-05.jpg)
-
 ## 總結
 
-基本的用戶設定也完成了。下篇將是用戶篇的最後一步 **用戶頁面**。
+雖然我本來想要加上刪除帳號的篇章，但無奈...實在是太長了，只能移到明天。下篇是刪除帳號和用戶頁面，用戶功能的最後一篇。
 
 > Lightning 範例程式碼：https://github.com/ycs77/lightning
