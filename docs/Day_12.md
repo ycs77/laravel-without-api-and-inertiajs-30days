@@ -1,4 +1,4 @@
-# Day 12 Lightning 編輯個人資料 & 刪除帳號
+# Day 12 Lightning 編輯個人資料
 
 ## 路由
 
@@ -19,7 +19,7 @@ Route::put('user', 'User\UserController@update');
 php artisan make:controller User/UserController
 ```
 
-為了方便在 Controller 裡呼叫 已登入用戶，在 `Controller` 增加一個 `user()`：
+為了方便在 Controller 裡呼叫 已登入用戶，到 `Controller` 增加一個 `user()`：
 
 *app/Http/Controllers/Controller.php*
 ```php
@@ -134,9 +134,9 @@ export default {
 </script>
 ```
 
-這次多了 `TextareaInput` 和 `FileInput`，為了不占版面，可以直接去我的 [Lightning GitHub 倉庫的 Components](https://github.com/ycs77/lightning/tree/master/resources/js/Components) 裡拿。
+這次多了 `TextareaInput` 和 `FileInput`，為了不佔版面，可以直接去我的 Lightning [GitHub 倉庫的 Components](https://github.com/ycs77/lightning/tree/master/resources/js/Components) 裡拿。
 
-再來要注意的是，雖然 Inertia 可以直接呼叫 `this.$inertia.put()`，但這裡用 `FormData` 傳大頭照過去，只能跟 Laravel 一樣，要 `post` 加 `_method=put`。
+再來要注意的是，雖然 Inertia 可以直接呼叫 `this.$inertia.put()`，但這裡有用 `FormData` 傳大頭照過去，不能用 `put` 方法傳送。只能跟 Laravel 一樣，要用 `post` 加 `_method=put`。
 
 還有這次用到的 CSS。`@screen` 是設定斷點，算是 `@media ...` 的 Tailwind CSS 縮寫：
 
@@ -201,11 +201,13 @@ export default {
 
 ## 更新資料
 
-新增一個 UpdateUserRequest，把驗證相關都寫在裡面：
+表單頁面好了之後，再來是處裡後端表單驗證和儲存資料的部分。新增一個 UpdateUserRequest，把驗證表單的規則都寫在裡面：
 
 ```bash
 php artisan make:request UpdateUserRequest
 ```
+
+預設的 `authorize()` 不會用到，直接刪掉沒關係。然後在 `rules()` 裡寫驗證規則：
 
 *app/Http/Requests/UpdateUserRequest.php*
 ```php
@@ -226,7 +228,7 @@ public function rules()
 }
 ```
 
-把 `password` 和 `avatar` 增加 `nullable` 是因為希望有輸入(上傳)才更新，否則為 `null`。但如果直接設 `null` 進資料庫會有問題，因此先在 UpdateUserRequest 裡調整已驗證的輸入資料：
+把 `password` 和 `avatar` 增加 `nullable` 是因為希望有輸入(上傳)才更新，否則為 `null`。但如果直接設 `null` 進資料庫會有問題，還要在 UpdateUserRequest 裡增加 `validationData()`，調整已驗證的輸入資料：
 
 *app/Http/Requests/UpdateUserRequest.php*
 ```php
@@ -246,7 +248,7 @@ public function validationData()
 }
 ```
 
-把 Hash 密碼和儲存上傳圖片的動作放在 User Model 裡：
+然後把 Hash 密碼和儲存上傳圖片的動作放在 User Model 裡：
 
 *app/User.php*
 ```php
@@ -267,7 +269,7 @@ public function setAvatarAttribute($avatar)
 }
 ```
 
-回到 UserController 新增 `update()`，更新用戶資料。除了可以回傳 **Inertia 響應** 也可以重新導向。更新後還要返回同頁，只要使用 `back()` 即可：
+回到 UserController 更新用戶資料。除了可以回傳 **Inertia 響應** 也可以重新導向。更新後還要返回表單頁 (上一頁)，只要使用 `back()` 即可：
 
 *app/Http/Controllers/User/UserController.php*
 ```php
@@ -382,6 +384,6 @@ export default {
 
 ## 總結
 
-雖然我本來想要加上刪除帳號的篇章，但無奈...實在是太長了，只能移到明天。下篇是刪除帳號和用戶頁面，用戶功能的最後一篇。
+雖然我本來想要加上刪除帳號的篇章，但無奈...實在是太長了，只能移到下次。下篇是刪除帳號和用戶頁面，用戶功能的最後一篇。
 
 > Lightning 範例程式碼：https://github.com/ycs77/lightning
