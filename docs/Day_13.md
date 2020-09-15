@@ -76,7 +76,7 @@ export default {
 ```vue
 <template>
   <div class="container py-8">
-    <alert v-if="$page.flash.success" class="mb-4">{{ $page.flash.success }}</alert>
+    <alert v-if="$page.flash.success" class="shadow mb-6">{{ $page.flash.success }}</alert>
     ...
   </div>
 </template>
@@ -113,13 +113,13 @@ php artisan db:seed --class=UserSeeder
 Route::get('user/{user}', 'User\ProfileController@index');
 ```
 
-每個用戶都會有不同的網址，我們來新增一個 `ProfileController` 管用戶頁面：
+每個用戶頁面都會有不同的網址，我們來新增一個 `ProfileController` 管用戶頁面：
 
 ```bash
 php artisan make:controller User/ProfileController
 ```
 
-`ProfileController` 內容：
+回傳用戶頁面：
 
 *app/Http/Controllers/User/ProfileController.php*
 ```php
@@ -175,7 +175,7 @@ export default {
 最後在右上選單裡增加我的主頁連結：
 
 *resources/js/Layouts/AppLayout.vue*
-```vue
+```html
 <template #menu="{ close }">
   <dropdown-item :href="`/user/${user.id}`" icon="heroicons-outline:home" @click="close">
     我的主頁
