@@ -33,7 +33,7 @@ Schema::create('posts', function (Blueprint $table) {
 php artisan migrate
 ```
 
-增加一些 Post 裡的設定，`$fillable` 是批量填充資料時允許的欄位；`$casts` 是型別轉換；`updateDescription()` 是更新 `description`，擷取 `content` 的前80個字，並在新增和更新 Model 時擷取 `description`；還有關聯作者：
+增加一些 Post 裡的設定，`$fillable` 是批量填充資料時允許的欄位；`$casts` 是型別轉換；`updateDescription()` 是更新 `description`，擷取文章內容的前80個字，並在新增和更新 Model 時擷取；還有關聯作者 User Model：
 
 *app/Post.php*
 ```php
