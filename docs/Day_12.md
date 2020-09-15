@@ -230,7 +230,7 @@ public function rules()
 }
 ```
 
-把 `password` 和 `avatar` 增加 `nullable` 是因為希望有輸入(上傳)才更新，否則為 `null`。但如果直接設 `null` 進資料庫會有問題，還要在 UpdateUserRequest 裡增加 `validationData()`，調整已驗證的輸入資料：
+`password` 和 `avatar` 欄位都是希望有輸入(或上傳檔案)才更新，沒有輸入也要可以通過驗證，這時可以使用 `nullable` 規則，允許 `null` 或不存在的值。但如果直接設 `null` 進資料庫會有問題，還要在 UpdateUserRequest 裡增加 `validationData()`，調整需要驗證的資料：
 
 *app/Http/Requests/UpdateUserRequest.php*
 ```php
