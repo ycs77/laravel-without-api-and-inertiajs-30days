@@ -33,7 +33,7 @@ Schema::create('posts', function (Blueprint $table) {
 php artisan migrate
 ```
 
-這裡增加一些 Post 裡的設定，`$fillable` 是批量填充資料時允許的欄位；`$casts` 是型別轉換；`updateDescription()` 是更新 `description`，擷取文章內容的前80個字，並在新增和更新 Model 時擷取；還有關聯作者 User Model：
+這裡增加一些 Post 裡的設定，`$fillable` 是批量填充資料時允許的欄位；`$casts` 是型別轉換；`updateDescription()` 會自動更新 `description`，擷取文章內容的前80個字，並在新增和更新 Model 時擷取；還有關聯作者 User Model：
 
 *app/Post.php*
 ```php
@@ -62,7 +62,7 @@ protected static function booted()
 
 public function updateDescription()
 {
-    $this->description = Str::limit($this->content, 80);
+    $this->description = Str::limit(preg_replace("/\r|\n/", '', $this->content), 80);
 
     return $this;
 }
