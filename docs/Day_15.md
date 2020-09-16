@@ -10,7 +10,7 @@
 Route::resource('posts', 'Post\PostController');
 ```
 
-還有把 `PostController.php` 搬移到 `Post` 資料夾下，`namespace` 也要更新。然後還有最重要的撰寫文章頁面，這個表單頁面會和修改文章共用，所以要塞一個空的 Post Model 進去：
+還有把 `PostController.php` 搬移到 `Post` 資料夾下，之後跟文章有關的 Controller 都放在這裡，記得 `namespace` 也要更新。然後還有最重要的撰寫文章頁面，這個表單頁面會和修改文章共用，所以要塞一個空的 Post Model 進去：
 
 *app/Http/Controllers/Post/PostController.php*
 ```php
@@ -258,7 +258,7 @@ public function store(PostRequest $request)
 
 ```bash
 php artisan tinker
->>> App\Post::first()
+>>> App\Post::find(1)
 ```
 
 ![](../images/day15-03.jpg)
