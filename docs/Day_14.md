@@ -1,16 +1,16 @@
 # Day 14 Lightning 文章功能
 
-Lightning 作為一個部落格平台，最重要的自然是發文功能。本篇要先準備好文章需要的 Migration、Model、Presenter 等等。
+Lightning 作為一個部落格平台，最重要的自然是發文功能。本篇要先準備好文章功能需要的 Migration、Model、Presenter 等等。
 
 ## 新增 Post Model 和相關檔案
 
-為了快速產生需要的檔案，新增 Model 後面還帶上 `-mfr`，`m` 是順便新增 Migration，`f` 是新增 Factory，`r` 是新增 Resource Controller：
+為了快速產生需要的檔案，新增 Model 後面還帶上 `-mfr`，`m` 是順便新增 Migration，`f` 是新增 Factory，`r` 是新增 Resource Controller，一行指令就解決：
 
 ```bash
 php artisan make:model Post -mfr
 ```
 
-然後規劃我們的資料表，這裡是用 `author_id` 指向 `users` 資料表：
+然後規劃我們的資料表，這裡是用 `author_id` 指向 `users` 資料表，即文章的作者：
 
 *database/migrations/2020_09_16_090156_create_posts_table.php*
 ```php
@@ -33,7 +33,7 @@ Schema::create('posts', function (Blueprint $table) {
 php artisan migrate
 ```
 
-增加一些 Post 裡的設定，`$fillable` 是批量填充資料時允許的欄位；`$casts` 是型別轉換；`updateDescription()` 是更新 `description`，擷取文章內容的前80個字，並在新增和更新 Model 時擷取；還有關聯作者 User Model：
+這裡增加一些 Post 裡的設定，`$fillable` 是批量填充資料時允許的欄位；`$casts` 是型別轉換；`updateDescription()` 是更新 `description`，擷取文章內容的前80個字，並在新增和更新 Model 時擷取；還有關聯作者 User Model：
 
 *app/Post.php*
 ```php
@@ -73,7 +73,7 @@ public function author()
 }
 ```
 
-User 也要設定和 Post 的關聯：
+User 也要設定和 Post 的關聯，這裡也要設定對應的 key `author_id`：
 
 *app/User.php*
 ```php
@@ -103,7 +103,7 @@ $factory->define(Post::class, function (Faker $faker) {
 php artisan make:seeder PostSeeder
 ```
 
-這裡隨機指派文章作者：
+隨機指派文章作者：
 
 *database/seeds/PostSeeder.php*
 ```php
