@@ -10,7 +10,7 @@
 Route::resource('posts', 'Post\PostController');
 ```
 
-還有把 `PostController.php` 搬移到 `Post` 資料夾下，之後跟文章有關的 Controller 都放在這裡，記得 `namespace` 也要更新。然後還有最重要的撰寫文章頁面，這個表單頁面會和修改文章共用，所以要塞一個空的 Post Model 進去：
+之後跟文章有關的 Controller 都放在 `Post` 資料夾下，要把 `PostController.php` 移進去，記得 `namespace` 也要更新。然後還有最重要的撰寫文章頁面，這個表單頁面會和修改文章共用，所以要塞一個空的 Post Model 進視圖：
 
 *app/Http/Controllers/Post/PostController.php*
 ```php
@@ -150,7 +150,7 @@ export default {
 </template>
 ```
 
-現在可以瀏覽 `/posts/create` 了，這時他會報 `"Call to a member function format() on null"` 錯誤。上面我們塞了一個空的 Post Model 進去，PostPresenter 裡又讓 `created_at` (這時是 `null`) 呼叫 `format()`，當然會有問題，解決方法是套一個 `optional()` (Laravel 的眾多輔助函數之一)，確保該物件是 `null` 時也不會報錯：
+現在可以瀏覽 `/posts/create` 了，這時他會報 `"Call to a member function format() on null"` 錯誤。因為上面我們塞了一個空的 Post Model 進去，PostPresenter 裡又讓 `created_at` (這時是 `null`) 呼叫 `format()`，當然會有問題，解決方法是套一個 `optional()` (Laravel 的眾多輔助函數之一)，確保該物件是 `null` 時也不會報錯：
 
 *app/Presenters/PostPresenter.php*
 ```php
@@ -171,7 +171,7 @@ public function values(): array
 
 ## 緩存資料
 
-假設你輸入到一半，在當前分頁瀏覽別的頁面，突然想到又點瀏覽器的回上一頁回來，很遺憾，輸入的資料都不見了。這時要介紹一個 Inertia.js 的緩存資料功能。用 `remember` 指定要緩存的 key，Inertia.js 會自動將該資料儲存到瀏覽器的歷史紀錄中：
+假設你輸入到一半，在當前分頁瀏覽別的頁面，突然想到又點瀏覽器的回上一頁回來，很遺憾，輸入的資料都不見了。這時要介紹一個 Inertia.js 的緩存資料功能，用 `remember` 指定要緩存的 key，Inertia.js 會自動將該資料儲存到瀏覽器的歷史紀錄中：
 
 ```js
 export default {
@@ -182,7 +182,7 @@ export default {
 }
 ```
 
-這時在表單隨便打上幾個字，去別的網站，然後再回上一頁，輸入的資料依然還在。
+現在在表單隨便打上幾個字，去別的網站，然後再回上一頁，輸入的資料依然還在~~
 
 ## 更新文章
 
@@ -205,7 +205,7 @@ public function rules()
 }
 ```
 
-`thumbnail` 分享的預覽圖片也是可選的，也要在 `validationData()` 裡調整。前面傳資料是用 FormData，`published` 的型別是文字，要轉換成 Boolean 型別：
+`thumbnail` 分享的預覽圖片也是可選的，也要在 `validationData()` 裡調整。這裡會有另一個問題，前面傳資料是用 FormData，傳過來 `published` 的型別會是文字 (`"true" or "false"`)，要轉換成 Boolean 型別：
 
 *app/Http/Requests/PostRequest.php*
 ```php
@@ -252,9 +252,11 @@ public function store(PostRequest $request)
 }
 ```
 
+然後現在就可以愉快的送出文章...
+
 ![](../images/day15-02.jpg)
 
-啊！空的？對，現在是空的。因為文章的頁面還沒有任何東西，如果回傳的頁面沒有 `X-Inertia: true`，他就會塞到彈出視窗裡。頁面會在下篇做，現在可以用 Tinker 確認剛才有新增成功：
+啊！空的？對，現在是空的。因為文章的頁面還沒有任何東西，如果回傳的頁面沒有 `X-Inertia: true`，他就會塞到彈出視窗裡。頁面會在下篇做，現在可以用 Tinker 確認剛才有沒新增成功：
 
 ```bash
 php artisan tinker
@@ -265,7 +267,7 @@ php artisan tinker
 
 ## 總結
 
-一個簡易的新增文章頁面出來了。下篇要做文章的頁面，繼續加油吧！
+一個簡易的發文功能出來了。下篇要做文章的頁面，繼續加油吧！
 
 > Lightning 範例程式碼：https://github.com/ycs77/lightning
 
