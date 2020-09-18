@@ -1,10 +1,10 @@
 # Day 16 Lightning 文章頁面
 
-再來要來做 Lightning 的文章頁面了，上篇新增的文章終於可以看到了。
+再來要做 Lightning 的文章頁面，上篇新增的文章終於可以看到了。
 
 ## 文章頁面
 
-文章頁面比較複雜一點點，我們把它抽出一個單獨的 Controller ShowPost。新增路由和排除 Resource 裡的 `show` 路由：
+文章頁面比較複雜一點點，我們把它抽出一個單獨的 ShowPost Controller。要排除掉 Resource 裡的 `show` 路由：
 
 *routes/web.php*
 ```php
@@ -12,13 +12,13 @@ Route::resource('posts', 'Post\PostController')->except('show');
 Route::get('posts/{post}', 'Post\ShowPost');
 ```
 
-新增這個 Controller，加上 `-i` 會幫你新增一個 `__invoke()` 方法，這就是 [Single Action Controller](https://laravel.com/docs/8.x/controllers#single-action-controllers)：
+新增這個 Controller，加上 `-i` 會新增 [Single Action Controller](https://laravel.com/docs/controllers#single-action-controllers)：
 
 ```bash
 php artisan make:controller Post/ShowPost -i
 ```
 
-Post 裡有個紀錄瀏覽次數的欄位 `visits`，每次瀏覽都會使用 `increment()` 自動加1：
+顧名思義，Single Action Controller 裡面只有一個 `__invoke()` 方法。在 Post 裡有個紀錄瀏覽次數的欄位 `visits`，可以使用 `increment()` 讓每次瀏覽都會自動加1：
 
 *app/Http/Controllers/Post/ShowPost.php*
 ```php
@@ -32,7 +32,7 @@ public function __invoke(Post $post)
 }
 ```
 
-可是 PostPresenter 裡的欄位沒有文章內容 `content` 和文章作者欄位，這裡要介紹一個 Flexible Presenter 的功能 `preset()`，例如在 `PostPresenter` 定義一個 `presetShow()` 方法，在呼叫處就可以用 `->preset('show')` 呼叫此方法，串接自訂的 preset：
+可是 PostPresenter 裡的欄位沒有文章內容 `content` 和文章作者欄位，這裡要介紹一個 Flexible Presenter 的功能 `preset()`，例如在 `PostPresenter` 定義一個 `presetShow()` 方法，在呼叫處就可以用 `->preset('show')` 呼叫此方法。先串接自訂的 preset：
 
 *app/Http/Controllers/Post/ShowPost.php*
 ```php
@@ -72,7 +72,7 @@ public function presetWithCount()
 
 然後前端文章頁面：
 
-> 這裡說一下文字太長會破版的坑，通常有些英文單字太長時，可以使用 `overflow-wrap: break-word` (Tailwind CSS 對應 `.break-words`) 來強制段行。但這裡做完之後，開手機板的寬度還是破版，因為這裡用 Grid 排版，踩到了 Grid 的坑 (Flex 也會遇到此問題)，解決方案之一是在 Grid 的元素的子元素，加上 `min-width: 0` (Tailwind CSS 對應 `.min-w-0`)。參考：[Preventing a Grid Blowout](https://css-tricks.com/preventing-a-grid-blowout/)。
+> 這裡說一下英文單字太長會破版的坑，通常有些英文單字太長時，可以使用 `overflow-wrap: break-word` (Tailwind CSS 對應 `.break-words`) 來強制段行。但這裡做完之後，開手機板的寬度還是破版，因為這裡用 Grid 排版，踩到了 Grid 的坑 (Flex 也會遇到此問題)，解決方案之一是在 Grid 的元素的子元素，加上 `min-width: 0` (Tailwind CSS 對應 `.min-w-0`)。參考：[Preventing a Grid Blowout](https://css-tricks.com/preventing-a-grid-blowout/)。
 
 *resources/js/Pages/Post/Show.vue*
 ```vue
@@ -175,17 +175,17 @@ export default {
 
 ![](../images/day16-01.jpg)
 
-文章要分享，SEO 自然不能少，Meta 交給 Vue Meta 了。可是 Vue Meta 只會在前端渲染啊！沒關係，之後會解決。
+> 文章要分享，SEO 自然不能少，Meta 交給 Vue Meta 了。可是 Vue Meta 只會在前端渲染啊！沒關係，之後會解決。
 
 ## 文章頁面顯示授權 - Policy
 
-文章還有個欄位叫 `published` (發布)，可以讓文章作者決定要不要發布文章，如果未發布(草稿)時，除了作者的其他人就不能看該文章。所以現在要來新增 PostPolicy：
+文章還有個欄位叫 `published` (發布)，可以讓文章作者決定要不要發布文章，正常在未發布(草稿)時，應該是除了作者的其他人就不能看該文章。所以現在要來新增 PostPolicy：
 
 ```bash
 php artisan make:policy PostPolicy --model=Post
 ```
 
-`view()` 方法就是管顯示單個資源的授權，為了兼容未登入要用 `?User` 標示為可選，`$user` 也要包 `optional()`。若此用戶有登入且為作者，就可以正常瀏覽，不管是不是草稿。若不是就只能瀏覽已發布的文章：
+`view()` 方法就是管顯示單個資源的授權，為了兼容未登入使用者這裡要用 `?User` 標示為可選，`$user` 也要包 `optional()`。若此用戶有登入且為作者，不管是不是草稿，都可以正常瀏覽。若不是就只能瀏覽已發布的文章：
 
 *app/Policies/PostPolicy.php*
 ```php
@@ -286,11 +286,11 @@ php artisan tinker
 
 ![](../images/day16-04.jpg)
 
-完成。
+完成！
 
 ## 優化瀏覽人次
 
-本篇最後要講的是優化瀏覽人次，現在如果你一直重新整理頁面，瀏覽次數就會一直飆升，但瀏覽次數就容易被灌水。這裡我們可以增加一些條件。需要是非作者的其他讀者，且沒有瀏覽過的 Session 紀錄，才會增加瀏覽次數：
+最後要講的是優化瀏覽人次，現在如果你一直重新整理頁面，瀏覽次數就會一直飆升，且容易被灌水。這裡我們可以增加一些條件。需要是非作者的其他讀者，且沒有瀏覽過的 Session 紀錄，才會增加瀏覽次數：
 
 ```php
 public function __invoke(Post $post)
@@ -311,7 +311,7 @@ protected function incrementVisit(Post $post)
 }
 ```
 
-現在重新整理就不會一直增加瀏覽人次囉！
+現在在無痕模式打開文章，瀏覽次數只會+1，且重新整理不會一直增加瀏覽人次。
 
 ## 總結
 
