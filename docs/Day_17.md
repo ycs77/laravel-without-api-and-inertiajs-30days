@@ -10,7 +10,7 @@
 yarn add mavon-editor
 ```
 
-註冊 mavonEditor：
+註冊 mavonEditor，這裡我選用 `atom-one-dark` 這個 highlight 程式碼主題：
 
 *resources/js/app.js*
 ```js
@@ -24,6 +24,8 @@ Vue.use(mavonEditor)
 
 然後新增一個 Markdown 編輯器組件，可以根據需求自行調整 mavonEditor 的設定 (參考 [mavonEditor API](https://github.com/hinesboy/mavonEditor#api-%E6%96%87%E6%A1%A3))：
 
+> 因為 mavonEditor 的 highlight.js 相關設定比較難覆蓋，在預覽時某些語言沒有 highlight 樣式，不過在正式顯示文章處不會有此問題，因為 highlight 都是自訂的。
+
 *resources/js/Components/MarkdownInput.vue*
 ```vue
 <template>
@@ -34,14 +36,14 @@ Vue.use(mavonEditor)
       :value="value"
       :class="editorClass"
       :language="lang"
-      fontSize="16px"
-      :boxShadow="false"
+      font-size="16px"
+      :box-shadow="false"
       :subfield="false"
       :placeholder="placeholder"
       :editable="editable"
       code-style="atom-one-dark"
       :autofocus="autofocus"
-      :tabSize="2"
+      :tab-size="2"
       :toolbars="toolbars"
       @input="value => $emit('input', value)"
       @imgAdd="uploadImage"
@@ -215,11 +217,13 @@ export default {
 
 ## 更新 Description 時編譯 Markdown
 
-為了讓生成文章的簡述 (Description) 去掉 Markdown 保留純文字，可以在 Laravel 這邊解析完 Markdown 後，再擷取文章的簡述。先安裝 Laravel 版 Parsedown (Markdown 解析器)：
+為了讓生成文章的簡述 (Description) 去掉 Markdown 保留純文字，可以在 Laravel 這邊解析完 Markdown，並去掉 HTML 後，再擷取文章的簡述。安裝 Laravel 版 Parsedown (PHP Markdown 解析器)：
 
 ```bash
 composer require parsedown/laravel
 ```
+
+抽出 `generateDescription()` 方法：
 
 *app/Post.php*
 ```php
@@ -231,7 +235,7 @@ public function updateDescription()
 public function generateDescription(string $markdown, int $limit): string
 {
     $text = strip_tags(app('parsedown')->parse($markdown));
-    $text = preg_replace("/\r|\n/", '', $text);
+    $text = preg_replace('/\r|\n/', '', $text);
 
     return Str::limit($text, $limit);
 }
@@ -316,7 +320,9 @@ export default {
 </script>
 ```
 
-最後覆寫預設的 Markdown 樣式：
+最後覆寫預設的 mavonEditor 編輯器和 Markdown 樣式，這邊有針對手機版做些微的調整：
+
+> 勉強能看，但不是到很好，因為 mavonEditor 原本只是做給電腦版用的。
 
 *resources/css/mavonEditor.css*
 ```css
@@ -409,7 +415,7 @@ WOW~~ 終於有文章的樣子了！
 
 ## 總結
 
-Markdown 寫文章真的很方便，可以很快速地使用文章內常見的元素 (標題、超連結等)，而且也是寫程式的人大多都會使用，上手難度不高，在 Lightning 裡自然也要有此等方便的東西，才說得過去啊！下篇要做作者的文章、草稿列表，文章列表要出現了，會不會有什麼奇怪的坑呢？
+用 Markdown 寫文章可以很快速地使用文章內常見的元素 (標題、超連結等)，上手難度不高，在 Lightning 裡自然也要有此等方便的東西才說得過去啊！下篇要做作者的文章、草稿列表，文章列表要出現了，會不會有什麼奇怪的坑呢？
 
 > Lightning 範例程式碼：https://github.com/ycs77/lightning
 
