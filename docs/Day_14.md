@@ -62,7 +62,7 @@ protected static function booted()
 
 public function updateDescription()
 {
-    $this->description = Str::limit(preg_replace("/\r|\n/", '', $this->content), 80);
+    $this->description = Str::limit(preg_replace('/\r|\n/', '', $this->content), 80);
 
     return $this;
 }
