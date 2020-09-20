@@ -2,38 +2,48 @@
 
 ## 文章列表
 
-文章列表的路由有了 (在 Resource 裡)，再加一個草稿列表的路由，一定要放在 ShowPost 上面：
+文章列表的路由已經存在 Resource 裡，只要再加一個草稿列表的路由，而且一定要放在 ShowPost 上面：
 
 *routes/web.php*
 ```php
 // Posts
-Route::resource('posts', 'Post\PostController')->except('show');
-Route::get('posts/drafts', 'Post\PostController@index');
+...
+Route::get('posts/drafts', 'Post\PostController@drafts');
 Route::get('posts/{post}', 'Post\ShowPost');
 ```
 
-然後是文章/草稿列表的 Controller：
+然後是文章列表和草稿列表的 Controller 部分：
 
 *app/Http/Controllers/Post/PostController.php*
 ```php
-public function index(Request $request)
+public function index()
 {
-    $type = $request->path() === 'posts' ? 'published' : 'drafts';
-
-    $pageTitles = [
-        'published' => '文章列表',
-        'drafts' => '草稿列表',
-    ];
-
     $posts = $this->user()
         ->posts()
-        ->where('published', $type === 'published')
+        ->where('published', true)
         ->latest()
         ->get();
 
     return Inertia::render('Post/List', [
-        'pageTitle' => $pageTitles[$type],
-        'type' => $type,
+        'type' => 'published',
+        'typeText' => '文章',
+        'posts' => PostPresenter::collection($posts)
+            ->preset('list')
+            ->get(),
+    ]);
+}
+
+public function drafts()
+{
+    $posts = $this->user()
+        ->posts()
+        ->where('published', false)
+        ->latest()
+        ->get();
+
+    return Inertia::render('Post/List', [
+        'type' => 'drafts',
+        'typeText' => '草稿',
         'posts' => PostPresenter::collection($posts)
             ->preset('list')
             ->get(),
@@ -55,7 +65,7 @@ public function presetList()
 }
 ```
 
-跟文章列表頁面：
+兩個列表是共用同一個列表頁面，只差會放不同的文章集合：
 
 *resources/js/Pages/Post/List.vue*
 ```vue
@@ -66,7 +76,7 @@ public function presetList()
     <div class="card card-main">
       <div>
         <div class="flex justify-between items-center">
-          <h2 class="text-3xl">我的文章</h2>
+          <h2 class="text-3xl">我的{{ typeText }}</h2>
           <div>
             <inertia-link href="/posts/create" class="link">
               <icon icon="heroicons-outline:pencil" />
@@ -83,7 +93,7 @@ public function presetList()
       </div>
 
       <div class="mt-6">
-        <post-list :posts="posts" hide-author :empty="emptyText" />
+        <post-list :posts="posts" hide-author :empty="`目前沒有${typeText}`" />
       </div>
     </div>
   </div>
@@ -100,7 +110,7 @@ export default {
   layout: AppLayout,
   metaInfo() {
     return {
-      title: this.pageTitle
+      title: `我的${this.typeText}`
     }
   },
   components: {
@@ -110,20 +120,15 @@ export default {
     PostList
   },
   props: {
-    pageTitle: String,
     type: String,
+    typeText: String,
     posts: Array
-  },
-  computed: {
-    emptyText() {
-      return this.type === 'drafts' ? '目前沒有草稿' : '目前沒有文章'
-    }
   }
 }
 </script>
 ```
 
-還有用到的組件們，有真正的文章列表組件。只要是文章列表都可以用這個組件渲染：
+還有要做使用到的組件們，首先是真正的文章列表組件，只要是文章列表都可以用這個組件渲染：
 
 *resources/js/Lightning/PostList.vue*
 ```vue
@@ -173,7 +178,7 @@ export default {
 </script>
 ```
 
-跟 Tab 組件：
+再來是一組簡易的 Tab 組件：
 
 *resources/js/Components/Tabs.vue*
 ```vue
@@ -242,7 +247,7 @@ Tab 組件的樣式：
 }
 ```
 
-然後就可以看到列表頁面，可以切換草稿頁面：
+然後就可以看到列表頁面，還可以切換草稿頁面：
 
 ![](../images/day18-01.jpg)
 
