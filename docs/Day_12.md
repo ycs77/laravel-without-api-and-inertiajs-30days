@@ -2,9 +2,15 @@
 
 註冊完帳號後，本篇要來更新資料和上傳大頭照。
 
-## 路由
+## 帳號設定頁面
 
-首先先開2個路由，顯示頁面和更新用戶：
+首先先新增 Controller：
+
+```bash
+php artisan make:controller User/UserController
+```
+
+再來開2個路由，顯示頁面和更新用戶：
 
 *routes/web.php*
 ```php
@@ -13,15 +19,7 @@ Route::get('user/setting', 'User\UserController@edit');
 Route::put('user', 'User\UserController@update');
 ```
 
-## 帳號設定頁面
-
-再來新增 Controller：
-
-```bash
-php artisan make:controller User/UserController
-```
-
-為了方便在 Controller 裡呼叫 已登入用戶，到 `Controller` 增加一個 `user()`：
+為了方便在 Controller 裡呼叫 已登入用戶，在主要的 `Controller` 裡增加一個 `user()`：
 
 *app/Http/Controllers/Controller.php*
 ```php
@@ -34,7 +32,7 @@ protected function user(): ?User
 }
 ```
 
-輸出編輯用戶的頁面，還有這些都是已登入用戶才能操作的路由，在 `__construct()` 裡加一個 `auth` Middleware：
+然後要輸出編輯用戶的頁面。還有在 `UserController` 裡都是已登入用戶才能操作，因此要在 `__construct()` 裡加一個 `auth` Middleware：
 
 *app/Http/Controllers/User/UserController.php*
 ```php

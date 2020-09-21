@@ -4,7 +4,13 @@
 
 ## 文章頁面
 
-文章頁面比較複雜一點點，我們把它抽出一個單獨的 ShowPost Controller。要排除掉 Resource 裡的 `show` 路由：
+文章頁面比較複雜一點點，我們把它抽出一個單獨的 ShowPost Controller，加上 `-i` 會新增 [Single Action Controller](https://laravel.com/docs/controllers#single-action-controllers)：
+
+```bash
+php artisan make:controller Post/ShowPost -i
+```
+
+要先排除掉 Resource 裡的 `show` 路由，和新增新的路由：
 
 *routes/web.php*
 ```php
@@ -12,13 +18,7 @@ Route::resource('posts', 'Post\PostController')->except('show');
 Route::get('posts/{post}', 'Post\ShowPost');
 ```
 
-新增這個 Controller，加上 `-i` 會新增 [Single Action Controller](https://laravel.com/docs/controllers#single-action-controllers)：
-
-```bash
-php artisan make:controller Post/ShowPost -i
-```
-
-顧名思義，Single Action Controller 裡面只有一個 `__invoke()` 方法。在 Post 裡有個紀錄瀏覽次數的欄位 `visits`，可以使用 `increment()` 讓每次瀏覽都會自動加1：
+顧名思義，Single Action Controller 裡面只有一個方法，這個方法要取名 `__invoke()`：
 
 *app/Http/Controllers/Post/ShowPost.php*
 ```php
@@ -32,7 +32,9 @@ public function __invoke(Post $post)
 }
 ```
 
-可是 PostPresenter 裡的欄位沒有文章內容 `content` 和文章作者欄位，這裡要介紹一個 Flexible Presenter 的功能 `preset()`，例如在 `PostPresenter` 定義一個 `presetShow()` 方法，在呼叫處就可以用 `->preset('show')` 呼叫此方法。先串接自訂的 preset：
+在 Post 裡有個紀錄瀏覽次數的欄位 `visits`，可以使用 `increment()` 讓每次瀏覽都會自動加1。
+
+可是 `PostPresenter` 裡的欄位沒有文章內容 `content` 和文章作者欄位，這裡要介紹一個 Flexible Presenter 的功能 `preset()`，例如在 `PostPresenter` 定義一個 `presetShow()` 方法，在呼叫處就可以用 `->preset('show')` 呼叫此方法。先串接自訂的 preset：
 
 *app/Http/Controllers/Post/ShowPost.php*
 ```php
@@ -58,7 +60,7 @@ public function presetShow()
 }
 ```
 
-這裡的 UserPresenter 也套用了 preset，同樣也要定義 `presetWithCount()`，`postsCount` 欄位是作者全部文章的數量：
+這裡的 `UserPresenter` 也套用了 preset，同樣也要定義 `presetWithCount()`，`postsCount` 欄位是作者全部文章的數量：
 
 *app/Presenters/UserPresenter.php*
 ```php

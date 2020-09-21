@@ -104,6 +104,12 @@ php artisan db:seed --class=UserSeeder
 
 ## 用戶頁面
 
+每個用戶頁面都會有不同的網址，我們來新增一個 `ProfileController` 管用戶頁面：
+
+```bash
+php artisan make:controller User/ProfileController
+```
+
 再來是用戶頁面的路由：
 
 *routes/web.php*
@@ -111,12 +117,6 @@ php artisan db:seed --class=UserSeeder
 // User
 ...
 Route::get('user/{user}', 'User\ProfileController@index');
-```
-
-每個用戶頁面都會有不同的網址，我們來新增一個 `ProfileController` 管用戶頁面：
-
-```bash
-php artisan make:controller User/ProfileController
 ```
 
 回傳用戶頁面：

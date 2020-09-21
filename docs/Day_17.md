@@ -153,7 +153,13 @@ export default {
 </script>
 ```
 
-剛才有定義了上傳圖片的路徑，現在來新增上傳圖片路由：
+剛才有定義了上傳圖片的路徑，現在來新增上傳圖片的 Controller：
+
+```bash
+php artisan make:controller UploadController
+```
+
+和路由：
 
 *routes/web.php*
 ```php
@@ -161,11 +167,7 @@ export default {
 Route::post('upload/mavon-editor-image', 'UploadController@mavonEditorImage');
 ```
 
-和 Controller：
-
-```bash
-php artisan make:controller UploadController
-```
+然後把圖片儲存到 `images` 子資料夾內：
 
 *app/Http/Controllers/UploadController.php*
 ```php
