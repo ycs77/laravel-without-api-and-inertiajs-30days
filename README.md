@@ -22,7 +22,7 @@
 16. [Day 16 Lightning 文章頁面](docs/Day_16.md)
 17. [Day 17 配置 Markdown](docs/Day_17.md)
 18. [Day 18 Lightning 文章、草稿列表](docs/Day_18.md)
-19. [Day 19 Inertia.js 分頁功能](docs/Day_19.md)
+19. [Day 19 Lightning 分頁功能](docs/Day_19.md)
 20. [Day 20 Lightning 顯示用戶的文章](docs/Day_20.md)
 21. [Day 21 Lightning 編輯 & 刪除文章](docs/Day_21.md)
 22. [Day 22 Lightning 點讚文章](docs/Day_22.md)
