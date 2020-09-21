@@ -162,7 +162,7 @@ export default {
   layout: AppLayout,
   metaInfo() {
     return {
-      title: `用戶 ${user.name}`
+      title: `用戶 ${this.user.name}`
     }
   },
   props: {
