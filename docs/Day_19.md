@@ -1,10 +1,10 @@
-# Day 19 Inertia.js 分頁功能
+# Day 19 Lightning 分頁功能
 
-如果在原本使用 Laravel Blade 要使用分頁是非常簡單的，但現在我們前端是使用 Vue，需要做一(~~億~~)些些調整才能使用分頁功能。
+在原本 Laravel Blade 裡要使用分頁是非常簡單的，但現在我們前端是 Vue，需要做一(~~億~~)些些調整才能使用分頁功能。
 
 ## 調整 Laravel 分頁器
 
-依然還是使用 Laravel 預設的分頁器功能：
+只要把 `get()` 改成 `paginate()` 就可以使用 Laravel 預設的分頁器功能：
 
 *app/Http/Controllers/Post/PostController.php*
 ```php
@@ -50,15 +50,15 @@ public function drafts()
 protected $perPage = 10;
 ```
 
-但預設的分頁器輸出的資料不完全是我們要的，現在要新增一個專門為 Inertia 調整的分頁器。省先要調整 `url()`，增加判斷當前輸出連結是不是第一頁，如果是就會把後面的 `?page=1` 自動減掉；`linkCollection()` 會輸出使適用於 Inertia 的分頁資料；最後在 `toArray()` 裡指定需要輸出的完整分頁器的資料，多一個 `showPaginator` 決定前端需不需要渲染分頁組件：
+但預設的分頁器輸出的資料不完全是我們要的，現在要新增一個繼承自 `LengthAwarePaginator` 的分頁器，然後稍微調整一下。首先要改 `url()`，增加判斷當前輸出連結是不是第一頁，如果是就會把後面的 `?page=1` 自動減掉；`linkCollection()` 會輸出使適用於 Inertia 的分頁資料；最後在 `toArray()` 裡指定需要輸出的完整分頁器的資料，多一個 `showPaginator` 決定前端需不需要渲染分頁組件：
 
 > Laravel 8 以上 `linkCollection()` 方法預設已經存在，不需要自訂。
 
-*app/Inertia/Paginator.php*
+*app/Pagination/Paginator.php*
 ```php
 <?php
 
-namespace App\Inertia;
+namespace App\Pagination;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
@@ -125,7 +125,7 @@ class Paginator extends LengthAwarePaginator
 
 *app/Providers/AppServiceProvider.php*
 ```php
-use App\Inertia\Paginator;
+use App\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 public function register()
@@ -213,7 +213,7 @@ export default {
 ...
 ```
 
-有了分頁組件，現在就可以加到文章列表組件裡。記得上面有調整了分頁集合渲染出來的資料？現在的文章集合是 `Object` 不是 `Array`，還有真正的文章們在 `posts.data`，這些也要調整：
+有了分頁組件，現在就可以加到文章列表組件裡。記得上面有調整了分頁集合渲染出來的資料？現在的文章集合是 `Object` 不是 `Array`，還有真正的文章們現在在 `posts.data`，這些都要調整：
 
 *resources/js/Lightning/PostList.vue*
 ```vue
@@ -247,7 +247,7 @@ export default {
 </script>
 ```
 
-列表頁面也不要忘記：
+列表頁面也不要忘記改 `posts` 的型別：
 
 *resources/js/Pages/Post/List.vue*
 ```vue
@@ -270,7 +270,26 @@ return [
 ];
 ```
 
-最後新增一堆假文章 (看不懂正常，這些都是假文產生器產生的啊...)：
+補上我的文章的選單連結：
+
+*resources/js/Layouts/AppLayout.vue*
+```html
+<template #menu="{ close }">
+  <dropdown-item :href="`/user/${user.id}`" icon="heroicons-outline:home" @click="close">
+    我的主頁
+  </dropdown-item>
+  ... <!-- 撰寫文章 -->
+  <dropdown-item href="/posts" icon="heroicons-outline:book-open" @click="close">
+    我的文章
+  </dropdown-item>
+  <dropdown-item href="/posts/drafts" icon="heroicons-outline:document-text" @click="close">
+    我的草稿
+  </dropdown-item>
+  ...
+</template>
+```
+
+最後新增一堆假文章 (看不懂正常，這些都是假文產生器產生的...)：
 
 ```bash
 >>> App\User::find(1)->posts()->saveMany(factory(App\Post::class, 60)->make())
