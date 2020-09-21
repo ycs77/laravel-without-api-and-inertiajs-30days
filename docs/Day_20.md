@@ -1,4 +1,4 @@
-# Day 20 Lightning 顯示用戶的文章 & 優化資料庫查詢
+# Day 20 Lightning 完善文章列表 & 優化資料庫查詢
 
 列表組件已經完成，再來可以做用戶頁面的文章列表了。
 
@@ -84,7 +84,7 @@ export default {
 
 > 看到的依然是假文產生的，別在意...
 
-嗯！頁面是正常了。但，這裡有一點點嚴重的資料庫查詢問題。
+嗯！頁面都正常了。但，這裡有一點點嚴重的資料庫查詢問題。
 
 ## 優化資料庫查詢
 
@@ -148,9 +148,85 @@ public function index(User $user)
 
 完成！沒有重複的查詢了！
 
+## 首頁文章列表
+
+現在終於要做 Lightning 首頁囉！首頁不放什麼花俏的東西，就放全部文章的列表。新增一個 `ShowPostList` Controller：
+
+```php
+php artisan make:controller Post/ShowPostList -i
+```
+
+範例的兩個路由可以刪掉了。然後新增路由：
+
+*routes/web.php*
+```php
+// Posts
+Route::get('/', 'Post\ShowPostList');
+...
+```
+
+列表的頁面前面都做過了，搬來用改一改就可以用。根據上面，這裡也要用 `with('author')` 預加載作者的 Model：
+
+*app/Http/Controllers/Post/ShowPostList.php*
+```php
+use App\Post;
+use App\Presenters\PostPresenter;
+use Inertia\Inertia;
+
+public function __invoke()
+{
+    $posts = Post::with('author')
+        ->where('published', true)
+        ->latest()
+        ->paginate();
+
+    return Inertia::render('Home', [
+        'posts' => PostPresenter::collection($posts)
+            ->preset('list')
+            ->get(),
+    ]);
+}
+```
+
+之前當範例的頁面 `HelloWorld.vue` 和 `About.vue` 也可以刪掉，然後新增首頁的頁面：
+
+*resources/js/Pages/Home.vue*
+```vue
+<template>
+  <div class="py-6 md:py-8">
+    <alert v-if="$page.flash.success" class="shadow mb-6">{{ $page.flash.success }}</alert>
+
+    <div class="card card-main">
+      <post-list :posts="posts" />
+    </div>
+  </div>
+</template>
+
+<script>
+import AppLayout from '@/Layouts/AppLayout'
+import PostList from '@/Lightning/PostList'
+import Alert from '@/Components/Alert'
+
+export default {
+  layout: AppLayout,
+  components: {
+    Alert,
+    PostList
+  },
+  props: {
+    posts: Object
+  }
+}
+</script>
+```
+
+![](../images/day20-05.jpg)
+
+這樣，就有了一個簡單的首頁啦！
+
 ## 總結
 
-本篇除了補上用戶頁面的文章歷表外，還簡單優化了資料庫查詢。下篇終於要補上文章的編輯和刪除，基本文章功能也快完成囉！
+本篇除了補上首頁和用戶頁面的文章列表外，還簡單優化了資料庫查詢。下篇要做文章的編輯和刪除，基本文章功能也快完成囉！
 
 > Lightning 範例程式碼：https://github.com/ycs77/lightning
 
