@@ -4,7 +4,7 @@
 
 ## 用戶頁面的文章列表
 
-首先先修改用戶頁面的 Controller 部分，因為之後還有用戶喜歡文章的列表，所以把標題 `pageTitle` 提出來。然後在 `UserPresenter` 後追加 `posts` 和 `postsCount` 兩個欄位：
+首先先修改用戶頁面的 Controller 部分，因為之後這個頁面還要放用戶喜歡的文章的列表，所以把標題 `pageTitle` 提出來。然後在 `UserPresenter` 後追加 `posts` 和 `postsCount` 兩個欄位：
 
 ```php
 use App\Presenters\PostPresenter;
@@ -27,7 +27,7 @@ public function index(User $user)
 }
 ```
 
-還有修改視圖頁面，增加切換頁面用的頁籤 `<tabs>`，和用戶寫的所有文章 `<post-list>`：
+還有修改視圖頁面，增加切換頁面用的頁籤 `<tabs>`，和文章列表組件 `<post-list>`：
 
 *resources/js/Pages/User/Profile.vue*
 ```vue
@@ -123,12 +123,13 @@ public function index(User $user)
 }
 ```
 
-優化之後 Query 次數瞬間減少許多，但還有一個點可以優化：
-
 ![](../images/day20-03.jpg)
+
+優化之後 Query 次數瞬間減少許多，但還有一個點可以優化：
 
 其實關聯查詢總數量也可以預加載，使用 `loadCount('publishedPosts')` 加載，然後它會把加載到的數量值丟到 `$user->published_posts_count` 裡，參考 [Counting Related Models](https://laravel.com/docs/eloquent-relationships#counting-related-models)：
 
+*app/Http/Controllers/User/ProfileController.php*
 ```php
 public function index(User $user)
 {
@@ -156,7 +157,7 @@ public function index(User $user)
 php artisan make:controller Post/ShowPostList -i
 ```
 
-範例的兩個路由可以刪掉了。然後新增路由：
+範例的兩個路由可以刪掉了。然後新增首頁路由：
 
 *routes/web.php*
 ```php
@@ -165,7 +166,7 @@ Route::get('/', 'Post\ShowPostList');
 ...
 ```
 
-列表的頁面前面都做過了，搬來用改一改就可以用。根據上面，這裡也要用 `with('author')` 預加載作者的 Model：
+列表的頁面前面都做過了，搬來用改一改就可以用。跟上面一樣，這裡也要用 `with('author')` 預加載作者的 Model：
 
 *app/Http/Controllers/Post/ShowPostList.php*
 ```php
