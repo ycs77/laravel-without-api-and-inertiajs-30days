@@ -168,7 +168,7 @@ export default {
       <icon icon="heroicons-outline:pencil" />
       編輯
     </inertia-link>
-    <a v-if="post.can.delete" :href="`/posts/${post.id}`" class="link" @click="destroy($event, post)">
+    <a v-if="post.can.delete" :href="`/posts/${post.id}`" class="link" @click.prevent="destroy(post)">
       <icon icon="heroicons-outline:trash" />
       刪除
     </a>
@@ -187,7 +187,7 @@ export default {
     <a v-if="post.can.delete"
       :href="`/posts/${post.id}`"
       class="btn btn-red-light text-sm px-3 py-1"
-      @click="destroy($event, post)"
+      @click.prevent="destroy(post)"
     >
       <icon class="mr-1" icon="heroicons-outline:trash" />
       刪除
@@ -195,6 +195,18 @@ export default {
   </div>
   ...
 </template>
+
+<script>
+export default {
+  methods: {
+    destroy(post) {
+      if (confirm('確定要刪除此文章? 刪除後即無法回復!')) {
+        this.$inertia.delete(`/posts/${post.id}`)
+      }
+    }
+  }
+}
+</script>
 ```
 
 這裡又多了新的藍色按鈕，再增加上去吧：
@@ -233,7 +245,7 @@ export default {
         </inertia-link>
       </div>
       <div>
-        <a :href="`/posts/${post.id}`" class="link" @click="destroy($event, post)">
+        <a :href="`/posts/${post.id}`" class="link" @click.prevent="destroy(post)">
           <icon icon="heroicons-outline:trash" />
           刪除
         </a>
@@ -246,8 +258,7 @@ export default {
 <script>
 export default {
   methods: {
-    destroy(e, post) {
-      e.preventDefault()
+    destroy(post) {
       if (confirm('確定要刪除此文章? 刪除後即無法回復!')) {
         this.$inertia.delete(`/posts/${post.id}`)
       }
