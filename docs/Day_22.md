@@ -2,9 +2,9 @@
 
 看到一篇優秀的文章，總是會給它按個讚，也可以從點讚次數來了解這篇文章的受歡迎程度。本篇就來實作這個功能，不過我會叫它「喜歡文章」嘻！
 
-## 喜歡功能後端部分
+## 喜歡功能
 
-不要重複造輪子，我們會用 [Laravel Acquaintances](https://github.com/multicaret/laravel-acquaintances) 這個套件來做這個功能。先安裝套件和發布資源：
+不要重複造輪子，因此我們會用 [Laravel Acquaintances](https://github.com/multicaret/laravel-acquaintances) 這個套件來做這個功能。先安裝套件和發布資源：
 
 ```bash
 composer require multicaret/laravel-acquaintances
@@ -19,7 +19,7 @@ php artisan migrate
 
 Acquaintances 這個套件包含了社群網站常見的功能，像發送好友請求、封鎖用戶、群組好友、評分、點讚、訂閱、收藏等， [Laravel Acquaintances 文檔](https://github.com/multicaret/laravel-acquaintances)，不過我們只需要喜歡(點讚)功能而已。
 
-首先在 User 加上 CanLike trait，讓用戶可以點喜歡。但用戶可以喜歡的東西可以有很多，這裡新增一個 `likedPosts()` 指定喜歡的文章，且要是已發布狀態的：
+首先在 User 加上 `CanLike` trait，讓用戶可以點喜歡。但用戶可以喜歡的東西可以有很多，這裡新增一個 `likedPosts()` 指定喜歡的文章，且要是已發布狀態的：
 
 *app/User.php*
 ```php
@@ -41,7 +41,7 @@ class User extends Authenticatable
 }
 ```
 
-Post 則是加上 CanBeLiked trait，讓文章可以被點喜歡：
+Post 則是加上 `CanBeLiked` trait，讓文章可以被點喜歡：
 
 ```php
 use Multicaret\Acquaintances\Traits\CanBeLiked;
@@ -84,7 +84,7 @@ public function like(Post $post)
 }
 ```
 
-在 `PostPresenter` 新增喜歡相關的欄位，`likes` 是喜歡的數量，`is_liked` 是得知文章是否被當前用戶點了喜歡：
+在 `PostPresenter` 新增喜歡相關的欄位，`likes` 是喜歡的數量，用 `likers_count_readable` 會返回易於閱讀的數字 (例：12萬)；`is_liked` 是得知文章是否被當前用戶點了喜歡：
 
 *app/Presenters/PostPresenter.php*
 ```php
@@ -92,7 +92,8 @@ public function values(): array
 {
     return [
         ...
-        'likes' => $this->likers()->count(),
+        'likes' => $this->likersCountReadable(),
+        ...
     ];
 }
 
@@ -119,7 +120,11 @@ public function presetWithCount()
 
 ## 喜歡按鈕
 
-換前端了，有了剛才後端的配置，前端就可以把按鈕和功能完成了。首先是在底部的編輯 & 刪除按鈕旁，加上喜歡文章的按紐，`<inertia-link>`，如果點了喜歡，會把愛心 icon 切換成實心。還有文章還沒發布時，回應的錯誤文字。作者卡片裡也可以多一個喜歡的文章的連結：
+換前端了，有了剛才後端的配置，前端就可以把按鈕和功能完成了。首先是在底部的編輯 & 刪除按鈕旁，加上喜歡文章的按紐，`<inertia-link>`，如果點了喜歡，會把愛心 icon 切換成實心。
+
+但這裡手機版依然會有過長問題，在按鈕上層增加 `flex-wrap` class，然後在編輯刪除按鈕加上 `mb-2` class，增加斷行後的按鈕間距。
+
+還有文章還沒發布時，回應的錯誤文字。作者卡片裡也可以多一個喜歡的文章的連結：
 
 ```vue
 <template>
@@ -127,19 +132,23 @@ public function presetWithCount()
 
   <markdown class="mt-6" :value="post.content" />
 
-  <div class="flex space-x-2 md:space-x-3 mt-6 font-light">
+  <div class="flex flex-wrap ...">
     <inertia-link
       :href="`/posts/${post.id}/like`"
       method="post"
-      class="btn btn-purple-light text-sm px-3 py-1"
+      class="btn btn-purple-light text-sm px-3 py-1 mb-2"
     >
       <icon class="mr-1 text-purple-500" :icon="!post.is_liked
         ? 'heroicons-outline:heart'
         : 'heroicons-solid:heart'"
-      />
-      喜歡 {{ post.likes }}
+      />喜歡 | {{ post.likes }}
     </inertia-link>
-    <!-- 編輯 & 刪除按鈕 -->
+    <inertia-link class="... mb-2">
+      <!-- 編輯 -->
+    </inertia-link>
+    <a class="... mb-2">
+      <!-- 刪除 -->
+    </a>
   </div>
   <div v-if="$page.errors.like" class="form-error">{{ $page.errors.like }}</div>
 
