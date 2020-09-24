@@ -233,5 +233,5 @@ export default {
 
 ## 參考資料
 
-* [Eager Loading - Eloquent: Relationships - Laravel](https://laravel.com/docs/8.x/eloquent-relationships#eager-loading)
+* [Eager Loading - Eloquent: Relationships - Laravel](https://laravel.com/docs/eloquent-relationships#eager-loading)
 * [Counting Related Models - Eloquent: Relationships - Laravel](https://laravel.com/docs/eloquent-relationships#counting-related-models)
