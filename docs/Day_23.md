@@ -1,4 +1,4 @@
-# Day 23 Lightning 喜歡功能的種種問題
+# Day 23 Lightning 喜歡文章功能的問題
 
 在上篇中已經做完了喜歡文章的功能，但還存在一些問題，本篇就來看這些問題。
 
@@ -99,7 +99,7 @@ public function likersCount()
 
 ![](../images/day23-02.jpg)
 
-這個格式和語言都不合我們的使用習慣，必須改！追下去發現要改的是在 `Multicaret\Acquaintances\Interaction` 這個 class，先覆蓋 `Interaction` 的來源：
+這個格式和語言都不合我們的使用習慣，必須改！追下去發現要改的是在 `Multicaret\Acquaintances\Interaction` 這個 class，先覆蓋引用 `Interaction` 的來源：
 
 *app/Acquaintances/CanBeLiked.php*
 ```php
@@ -109,7 +109,7 @@ public function likersCountFormatted($precision = 1, $divisors = null)
 }
 ```
 
-然後新增我們的 `Interaction`：
+再新增我們的 `Interaction`，這裡除了改成中文外，還多做了一點調整，讓數字在千位(含)以下時不要有小數點：
 
 *app/Acquaintances/Interaction.php*
 ```php
@@ -243,7 +243,7 @@ public function drafts()
 
 在點完喜歡後更新頁面時，卻還是重新載入所有 Props，但絕大部分的 Props 都是不需要重新加載。這時候部分重載就可以用 `only` 指定只要載入哪些 Props，減輕回傳的資料量。
 
-既然需要使用到部分重載，就拿這個來示範。首先先指定更新頁面只會加載 `postOnlyLikes` 和 `errors`，`postOnlyLikes` 只會裝更新頁面會更新的相關資料，等下會在後端設定。然後要把 `likes` 和 `is_liked` 改成從 `postOnlyLikes` 引入。還有在點完喜歡後葉面都會被拉回頂端，這個只要加上 `preserve-scroll`，就可以保留滾動位置了：
+既然需要使用到部分重載，就拿點擊喜歡文章來示範。首先先指定更新頁面只會加載 `postOnlyLikes` 和 `errors`，`postOnlyLikes` 只會裝更新頁面會更新的相關資料，等下會在後端設定。然後要把 `likes` 和 `is_liked` 改成從 `postOnlyLikes` 引入。還有在點完喜歡後頁面都會被拉回頂端，這個只要加上 `preserve-scroll`，就可以保留滾動位置了：
 
 *resources/js/Pages/Post/Show.vue*
 ```vue
@@ -282,17 +282,19 @@ public function __invoke(Post $post)
         'postOnlyLikes' => PostPresenter::make($post)
             ->only('likes')
             ->with(fn (Post $post) => [
-                'is_liked' => $post->isLiked,
+                'is_liked' => $post->is_liked,
             ])
             ->get(),
     ]);
 }
 ```
 
-新增 `is_liked` Accessor，抽出來的目的是可以把讀取的值快取起來：
+新增 Post 裡的 `is_liked` Accessor，並快取 `is_liked` 的值：
 
 *app/Post.php*
 ```php
+use Illuminate\Support\Facades\Auth;
+
 protected ?bool $isLikedCache = null;
 
 public function getIsLikedAttribute()
@@ -305,7 +307,7 @@ public function getIsLikedAttribute()
 }
 ```
 
-既然抽出來了，就可以改成直接讀 `isLiked` 了：
+當然其實 `$post->is_liked` 是從 `PostPresenter` 裡抽取出來的，也要更新一下：
 
 *app/Presenters/PostPresenter.php*
 ```php
@@ -313,7 +315,7 @@ public function presetShow()
 {
     return $this->with(fn (Post $post) => [
         ...
-        'is_liked' => $post->isLiked,
+        'is_liked' => $post->is_liked,
     ]);
 }
 ```
@@ -324,7 +326,7 @@ public function presetShow()
 
 ### 原理
 
-剛才實作完了，現在回來看原理，首先是熟悉的 HTTP 請求內容。這次不是照搬官網的，而是用剛才部分重載的 HTTP 請求：
+剛才實作完了，現在回來看原理，首先是熟悉的 HTTP 請求內容。這次不是照搬官網的，而是調整成剛才部分重載的 HTTP 請求：
 
 請求：
 ```http
@@ -345,18 +347,19 @@ Content-Type: application/json
 {
   "component": "Post/Show",
   "props": {
-    "post": {...},       // NOT included
-    "postOnlyLikes": {   // included
+    "post": {...},       // 不包含
+    "postOnlyLikes": {   // 包含
       "likes": "6",
       "is_liked": false
-    }
+    },
+    "errors": {...}      // 包含
   },
   "url": "/posts/39",
   "version": "88ddfee9f5eae5bd7f534fa187e69da8"
 }
 ```
 
-這次終於要來講新的 Header 了，`X-Inertia-Partial-Data` 是剛才傳進去 `only` 的欄位，但要用 `,` 隔開；`X-Inertia-Partial-Component` 是要部分重載的組件名稱。部分重載這裡有個規定，只能在同一頁面發出部分重載的請求，否則不會起作用。
+這次終於要來講新的 Header 了，`X-Inertia-Partial-Data` 是剛才傳進去 `only` 的欄位，但要用 `,` 隔開，`X-Inertia-Partial-Component` 是要部分重載的組件名稱，因為部分重載有個規定，只能對同一頁面發出部分重載的請求，否則不會起作用。
 
 說完部分重載再來說 [懶加載 (**Lazy Evaluation**)](https://inertiajs.com/responses#lazy-evaluation)，懶加載一定要在用部分重載時才有作用。就拿剛才的範例，假設現在有個 `test_users` 欄位，裡面有個 `User::all()` 會跟資料庫發 ``select * from `users`;`` 這串 Query，即使用了部分重載，即 `only` 沒有包含 `test_users`，那串 SQL Query 仍會執行：
 
