@@ -1,4 +1,4 @@
-# Day 22 Lightning 喜歡文章
+# Day 22 Lightning 喜歡文章功能
 
 看到一篇優秀的文章，總是會給它按個讚，也可以從點讚次數來了解這篇文章的受歡迎程度。本篇就來實作這個功能，不過我會叫它「喜歡文章」嘻！
 
@@ -17,9 +17,9 @@ php artisan vendor:publish --provider="Multicaret\Acquaintances\AcquaintancesSer
 php artisan migrate
 ```
 
-Acquaintances 這個套件包含了社群網站常見的功能，像發送好友請求、封鎖用戶、群組好友、評分、點讚、訂閱、收藏等， [Laravel Acquaintances 文檔](https://github.com/multicaret/laravel-acquaintances)，不過我們只需要喜歡(點讚)功能而已。
+Acquaintances 這個套件包含了社群網站常見的功能，像發送好友請求、封鎖用戶、群組好友、評分、點讚、訂閱、收藏等，想要詳細了解請參考 [Laravel Acquaintances 文檔](https://github.com/multicaret/laravel-acquaintances)，不過我們只需要喜歡(點讚)功能而已。
 
-首先在 User 加上 `CanLike` trait，讓用戶可以點喜歡。但用戶可以喜歡的東西可以有很多，這裡新增一個 `likedPosts()` 指定喜歡的文章，且要是已發布狀態的：
+首先在 User 加上 `CanLike` trait，讓用戶可以點喜歡。但用戶可以喜歡的東西可以有很多，這裡新增一個 `likedPosts()` 取得喜歡的文章，而且要是已發布狀態的：
 
 *app/User.php*
 ```php
@@ -66,6 +66,8 @@ Route::post('posts/{post}/like', 'Post\PostController@like');
 
 *app/Http/Controllers/Post/PostController.php*
 ```php
+use Illuminate\Validation\ValidationException;
+
 public function like(Post $post)
 {
     if (! $post->published) {
@@ -84,7 +86,7 @@ public function like(Post $post)
 }
 ```
 
-在 `PostPresenter` 新增喜歡相關的欄位，`likes` 是喜歡的數量，用 `likers_count_readable` 會返回易於閱讀的數字 (例：12萬)；`is_liked` 是得知文章是否被當前用戶點了喜歡：
+然後在 `PostPresenter` 新增喜歡相關的欄位，`likes` 是喜歡的數量，用 `likersCountReadable()` 會返回易於閱讀的數字 (例：12萬)，`is_liked` 是得知文章是否被當前用戶點了喜歡：
 
 *app/Presenters/PostPresenter.php*
 ```php
@@ -100,6 +102,7 @@ public function values(): array
 public function presetShow()
 {
     return $this->with(fn (Post $post) => [
+        ...
         'is_liked' => $this->user() ? $post->isLikedBy($this->user()) : false,
     ]);
 }
@@ -120,12 +123,11 @@ public function presetWithCount()
 
 ## 喜歡按鈕
 
-換前端了，有了剛才後端的配置，前端就可以把按鈕和功能完成了。首先是在底部的編輯 & 刪除按鈕旁，加上喜歡文章的按紐，`<inertia-link>`，如果點了喜歡，會把愛心 icon 切換成實心。
+換前端了，有了剛才後端的配置，前端就可以把按鈕和功能完成了。首先是在底部的編輯 & 刪除按鈕旁，加上喜歡文章的按紐，如果點了喜歡，會把空心愛心 icon 切換成實心。
 
-但這裡手機版依然會有過長問題，在按鈕上層增加 `flex-wrap` class，然後在編輯刪除按鈕加上 `mb-2` class，增加斷行後的按鈕間距。
+但這裡手機版依然會有過長問題，解決方法是在按鈕上層 div 增加 `flex-wrap` class，然後在編輯刪除按鈕加上 `mb-2` class，增加斷行後的按鈕間距。還有文章還沒發布時，點喜歡回應的錯誤文字。作者卡片裡也可以多一個喜歡的文章的連結：
 
-還有文章還沒發布時，回應的錯誤文字。作者卡片裡也可以多一個喜歡的文章的連結：
-
+*resources/js/Pages/Post/Show.vue*
 ```vue
 <template>
   ...
@@ -165,7 +167,7 @@ public function presetWithCount()
 </template>
 ```
 
-然後就可以點喜歡啦：
+然後就可以點喜歡啦 (格式怪怪的，之後會調)：
 
 ![](../images/day22-01.jpg)
 
@@ -180,7 +182,7 @@ public function presetWithCount()
 Route::get('user/{user}/likes', 'User\ProfileController@likes');
 ```
 
-和 COntroller 的部分。之前都是用 `latest()` 幫文章排序，但這裡應該是要根據點喜歡的時間做排序，可以用 `latest('pivot_created_at')` 排序。還有要新增兩頁都會顯示的用戶喜歡文章數 `likedPosts`：
+再來是 Controller 的部分，之前都是用 `latest()` 幫文章排序，但這裡應該是要根據點喜歡的時間做排序，要使用 `latest('pivot_created_at')` 排序。還有要新增用戶喜歡文章數 `likedPosts`：
 
 *app/Http/Controllers/User/ProfileController.php*
 ```php
