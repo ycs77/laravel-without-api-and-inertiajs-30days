@@ -128,7 +128,7 @@ public function store(CommentRequest $request, Post $post)
 {
     $comment = Comment::make($request->validated());
     $comment->post()->associate($post);
-    $comment->committer()->associate($this->user());
+    $comment->commenter()->associate($this->user());
     $comment->save();
 
     return back();
