@@ -155,6 +155,8 @@ export default {
 </script>
 ```
 
+> mavonEditor 和 Laravel Debugbar 同時開啟時，mavonEditor 會無法正常顯示，在 `.env` 加上 `DEBUGBAR_ENABLED=false` 關閉 Debugbar 就正常了。
+
 做是做好了，但還沒有編輯文章和刪除文章的按鈕，先從文章頁面開始。上面下面各一排，上面因為加了按鈕之後變長了，在手機板排版會跑掉，因為按鈕上層是用 Flex 排版，只要加上 `flex-wrap` 就解決了：
 
 *resources/js/Pages/Post/Show.vue*
