@@ -42,8 +42,8 @@ DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=lightning
-DB_USERNAME=[dm-name]
-DB_PASSWORD=[dm-password]
+DB_USERNAME=[db-username]
+DB_PASSWORD=[db-password]
 ...
 FILESYSTEM_DRIVER=public
 ```
