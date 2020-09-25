@@ -10,7 +10,7 @@
 php artisan make:model Comment -mf
 ```
 
-和規劃資料表結構，這邊為了更符合語意，提交留言的用戶改用 `committer_id`：
+和規劃資料表結構，`commenter_id` 欄位是提交留言的用戶 ID：
 
 *database/migrations/2020_09_26_093544_create_comments_table.php*
 ```php
@@ -18,7 +18,7 @@ Schema::create('comments', function (Blueprint $table) {
     $table->id();
     $table->text('content');
     $table->foreignId('post_id')->constrained()->onDelete('cascade');
-    $table->foreignId('committer_id')->constrained('users')->onDelete('cascade');
+    $table->foreignId('commenter_id')->constrained('users')->onDelete('cascade');
     $table->timestamps();
 });
 ```
@@ -39,7 +39,7 @@ protected $fillable = [
 
 protected $casts = [
     'post_id' => 'integer',
-    'committer_id' => 'integer',
+    'commenter_id' => 'integer',
 ];
 
 public function post()
@@ -47,7 +47,7 @@ public function post()
     return $this->belongsTo(Post::class);
 }
 
-public function committer()
+public function commenter()
 {
     return $this->belongsTo(User::class);
 }
@@ -87,7 +87,7 @@ public function run()
 
         factory(Comment::class, random_int(0, 3))->make()
             ->each(function (Comment $comment) use ($post) {
-                $comment->committer()->associate(User::inRandomOrder()->first());
+                $comment->commenter()->associate(User::inRandomOrder()->first());
                 $comment->post()->associate($post);
                 $comment->save();
             });
@@ -149,9 +149,8 @@ class CommentPresenter extends FlexiblePresenter
         return [
             'id' => $this->id,
             'content' => $this->content,
-            'committer' => UserPresenter::make($this->committer)->get(),
+            'commenter' => UserPresenter::make($this->commenter)->get(),
             'created_at' => $this->created_at->diffForHumans(),
-            'can_delete' => $this->userCan('delete', $this->resource),
         ];
     }
 }
