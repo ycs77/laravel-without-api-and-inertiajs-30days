@@ -4,7 +4,10 @@
 
 ## 安裝 Laravel
 
-說到 Laravel 最近的大事件，就是 Laravel 8 已經發布了！但在本系列要使用的套件有部分還不支援 Laravel 8，因此我們還是用 Laravel 7 來建構 Lightning：
+說到 Laravel 最近的大事件，就是 Laravel 8 準備要發布了！但在本系列要使用的套件有部分還不支援 Laravel 8，因此我們還是用 Laravel 7 來建構 Lightning：
+
+> 2020/09/08: Laravel 8 已經發布了
+> 2020/09/25: 套件也都支援 Laravel 8 了
 
 ```bash
 composer create-project --prefer-dist "laravel/laravel:7.*" lightning
