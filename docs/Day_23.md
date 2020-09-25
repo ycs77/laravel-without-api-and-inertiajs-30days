@@ -62,7 +62,7 @@ trait CanBeLiked
 
     public function likersCount()
     {
-        return $this->attributes['likers_count'];
+        return $this->attributes['likers_count'] ?? 0;
     }
 }
 ```
