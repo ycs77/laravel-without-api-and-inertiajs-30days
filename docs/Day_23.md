@@ -2,7 +2,7 @@
 
 在上篇中已經做完了喜歡文章的功能，但還存在一些問題，本篇就來看這些問題。
 
-## 預加載 likersCount() 問題
+## 預加載 likers()->count() 問題
 
 首先看到的是重複的 Query，原因是 Post model 撈 likers (喜歡此文章的用戶) 數量撈 2 次：
 
@@ -22,8 +22,6 @@ public function values(): array
 }
 ```
 
-當然第一個就會想到用 `withCount()`/`loadCount()` 來解，但即使預加載了數量，也暫時回來用 `likers_count`，這兩個 Query 還是頑固地在原地不動。
-
 我們都是~~成熟~~(誤)的開發者了，遇到問題要學會自己 Debug。爬了源碼後發現問題在這：
 
 *vendor/multicaret/laravel-acquaintances/src/Traits/CanBeLiked.php*
@@ -42,7 +40,9 @@ trait CanBeLiked
 }
 ```
 
-這個套件加了 `getLikersCountAttribute()` 覆蓋掉了 `likers_count`，所以預加載的值讀不到。而 `likers_count_readable` 的數值來源是呼叫 `likersCount()`，當然也不能用預加載讀。
+當然第一個就會想到用 `withCount()`/`loadCount()` 來解，但即使預加載了數量，也暫時回來用 `likers_count`，這兩個 Query 還是頑固地在原地不動。
+
+這個套件加了 `getLikersCountAttribute()` 覆蓋掉了 `likers_count`，所以即使用了預加載還是讀不到值。而 `likers_count_readable` 的數值來源是呼叫 `likers()->count()`，當然也不能用預加載讀。
 
 山不轉路轉，我們還可以自己新增自己的 trait 去繼承 (正確來說是 use) 原本的 trait，然後覆寫 `likersCount()`，讓他強制讀取 `likers_count` 的值：
 
@@ -87,7 +87,7 @@ class Post extends Model
 
 ## 本地化可讀數字
 
-事情還沒完，回來看前端，如果我們先暫時把 `likersCount()` 改成一個稍大一點的數字會看到什麼結果：
+事情還沒完，回來看前端，如果我們先暫時把 `likersCount()` 改成一個稍大一點的數字會看到什麼結果？：
 
 *app/Acquaintances/CanBeLiked.php*
 ```php
@@ -99,7 +99,9 @@ public function likersCount()
 
 ![](../images/day23-02.jpg)
 
-這個格式和語言都不合我們的使用習慣，必須改！追下去發現要改的是在 `Multicaret\Acquaintances\Interaction` 這個 class，先覆蓋引用 `Interaction` 的來源：
+居然寫 `12.8K`？這個格式和語言都不合我們的使用習慣啊！必須改！
+
+追下去發現要改的是在 `Multicaret\Acquaintances\Interaction` 這個 class，先覆蓋引用 `Interaction` 的來源：
 
 *app/Acquaintances/CanBeLiked.php*
 ```php
@@ -243,7 +245,7 @@ public function drafts()
 
 在點完喜歡後更新頁面時，卻還是重新載入所有 Props，但絕大部分的 Props 都是不需要重新加載。這時候部分重載就可以用 `only` 指定只要載入哪些 Props，減輕回傳的資料量。
 
-既然需要使用到部分重載，就拿點擊喜歡文章來示範。首先先指定更新頁面只會加載 `postOnlyLikes` 和 `errors`，`postOnlyLikes` 只會裝更新頁面會更新的相關資料，等下會在後端設定。然後要把 `likes` 和 `is_liked` 改成從 `postOnlyLikes` 引入。還有在點完喜歡後頁面都會被拉回頂端，這個只要加上 `preserve-scroll`，就可以保留滾動位置了：
+既然需要使用到部分重載，就拿點擊喜歡文章來示範。首先先指定更新頁面只會加載 `postOnlyLikes` 和 `errors`，`postOnlyLikes` 只會裝更新頁面會更新的相關資料，等下會在後端設定。然後要把 `likes` 和 `is_liked` 變成 `postOnlyLikes` 的屬性。還有在點完喜歡後頁面都會被拉回頂端，這個只要加上 `preserve-scroll`，就可以保留滾動位置了：
 
 *resources/js/Pages/Post/Show.vue*
 ```vue
@@ -359,9 +361,9 @@ Content-Type: application/json
 }
 ```
 
-這次終於要來講新的 Header 了，`X-Inertia-Partial-Data` 是剛才傳進去 `only` 的欄位，但要用 `,` 隔開，`X-Inertia-Partial-Component` 是要部分重載的組件名稱，因為部分重載有個規定，只能對同一頁面發出部分重載的請求，否則不會起作用。
+這次終於要來講新的 Header 了，`X-Inertia-Partial-Data` 是剛才傳進去 `only` 的欄位，但要用 `,` 隔開，`X-Inertia-Partial-Component` 是要部分重載的組件名稱，因為 Inertia 有個規定，只能對同一頁面發出部分重載的請求，否則不會起作用。
 
-說完部分重載再來說 [懶加載 (**Lazy Evaluation**)](https://inertiajs.com/responses#lazy-evaluation)，懶加載一定要在用部分重載時才有作用。就拿剛才的範例，假設現在有個 `test_users` 欄位，裡面有個 `User::all()` 會跟資料庫發 ``select * from `users`;`` 這串 Query，即使用了部分重載，即 `only` 沒有包含 `test_users`，那串 SQL Query 仍會執行：
+說完部分重載再來說 [懶加載 (**Lazy Evaluation**)](https://inertiajs.com/responses#lazy-evaluation)，懶加載一定要在用部分重載時才有作用。就拿剛才的範例，假設現在有個 `test_users` 欄位，裡面有個 `User::all()` 會跟資料庫發 ``select * from `users`;`` 這串 Query，即使用了部分重載 (即 `only` 沒有包含 `test_users`)，那串 SQL Query 仍會執行：
 
 *app/Http/Controllers/Post/ShowPost.php*
 ```php
@@ -374,7 +376,7 @@ public function __invoke(Post $post)
 }
 ```
 
-其實這也沒有很奇怪，因為程式執行到這裡就一定會先發送 SQL Query 才會給 Inertia 做部分重載。要推遲執行時間就要使用**懶加載**，作法很簡單，只要套上 Closure 就行了。只有確定要使用到 `test_users` 時才會真正被加載：
+其實這也沒有很奇怪，因為程式執行到這裡就一定會先發送 SQL Query 才會傳值給 Inertia 視圖。要推遲執行時間就要使用 **懶加載**，作法很簡單，只要套上 Closure 就行了。只有確定要使用到 `test_users` 時才會真正被加載：
 
 *app/Http/Controllers/Post/ShowPost.php*
 ```php
@@ -387,11 +389,11 @@ public function __invoke(Post $post)
 }
 ```
 
-然後再回去看 Debugbar，只有在頁面剛載入時才會執行 ``select * from `users`;``，之後再點喜歡文章按鈕時都不會看到這行 Query 了。
+然後再回去看 Debugbar，只有在頁面剛載入時 (需要 `test_users`) 才會執行 ``select * from `users`;``，之後再點喜歡文章按鈕時 (不需要 `test_users`) 都不會看到這行 Query 了。這就是 **懶加載**。
 
 ## 總結
 
-文章喜歡的功能終於處裡完成了，同時也了解了 Inertia 的 **部分重載**和**懶加載**功能。下篇要進入本系列 Lightning 的最後一個功能 **文章留言**，快要結束囉！
+文章喜歡的功能終於處裡完成了，同時也了解了 Inertia 的 **部分重載**和**懶加載**功能。下篇開始要進入本系列 Lightning 的最後一個功能 **文章留言** 的部分，快要結束囉！
 
 > Lightning 範例程式碼：https://github.com/ycs77/lightning
 
