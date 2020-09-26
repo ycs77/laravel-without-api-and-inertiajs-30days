@@ -10,7 +10,7 @@
 php artisan make:model Comment -mf
 ```
 
-和規劃資料表結構，`commenter_id` 欄位是提交留言的用戶 ID：
+和規劃資料表結構，`commenter_id` 欄位是留言的用戶 ID：
 
 *database/migrations/2020_09_26_093544_create_comments_table.php*
 ```php
@@ -29,7 +29,7 @@ Schema::create('comments', function (Blueprint $table) {
 php artisan migrate
 ```
 
-還有 Comment 的一些基本設定和關聯：
+還有 Comment Model 的一些基本設定和關聯：
 
 *app/Comment.php*
 ```php
@@ -63,7 +63,7 @@ public function comments()
 }
 ```
 
-然後配置 Comment 的假文 Factory 和 Seeder 部分：
+然後配置 Comment 的假文 Factory：
 
 *database/factories/CommentFactory.php*
 ```php
@@ -103,7 +103,7 @@ public function run()
 php artisan make:controller Post/CommentController -r --model=Comment
 ```
 
-留言只會用到儲存和刪除留言兩個方法，其他可以刪掉，路由也一樣 (用 `only` 指定)：
+留言只會用到儲存和刪除留言兩個方法，其他可以不用，路由也一樣 (用 `only` 指定)：
 
 *routes/web.php*
 ```php
