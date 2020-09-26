@@ -146,6 +146,6 @@ php artisan tinker
 
 ## 總結
 
-留言功能需要的 Markdown 需要的組件之前也都有了，現在都可以直接拿來用。下篇顯示文章留言 & 刪除留言留言的最後部分。
+留言功能需要的 Markdown 需要的組件之前也都有了，現在都可以直接拿來用。下篇來做留言功能的最後部分，顯示文章留言 & 刪除留言。
 
 > Lightning 範例程式碼：https://github.com/ycs77/lightning
