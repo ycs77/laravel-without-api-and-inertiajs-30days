@@ -297,6 +297,21 @@ export default {
 </script>
 ```
 
+> ### Inertia.js v0.3 已棄用 Promise 調用方式
+>
+> 現在全系列已更新為 Inertia.js v0.3，增加了 [Event system (事件系統)](https://inertiajs.com/events)，Promise 調用的方式已棄用，若尚未更新至 v0.3 請更新版本：
+> ```bash
+> yarn add @inertiajs/inertia@^0.3 @inertiajs/inertia-vue@^0.2.4
+> ```
+>
+> 但如果你還是想要使用舊方法或者不想升級，請參考以下用法：
+> ```js
+> submit() {
+>   this.loading = true
+>   this.$inertia.post('/login', this.form).then(() => this.loading = false)
+> }
+> ```
+
 基本這樣就可以登入了，把前面新增的帳密輸入進去並送出：
 
 ![](../images/day09-03.jpg)

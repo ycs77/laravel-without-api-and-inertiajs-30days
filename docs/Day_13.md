@@ -72,6 +72,25 @@ export default {
 </script>
 ```
 
+> ### Inertia.js v0.3 已棄用 Promise 調用方式
+>
+> 現在全系列已更新為 Inertia.js v0.3，增加了 [Event system (事件系統)](https://inertiajs.com/events)，Promise 調用的方式已棄用，若尚未更新至 v0.3 請更新版本：
+> ```bash
+> yarn add @inertiajs/inertia@^0.3 @inertiajs/inertia-vue@^0.2.4
+> ```
+>
+> 並參考 [Day 09 Lightning 用戶登入](https://ithelp.ithome.com.tw/articles/10235589) 的「載入進度條」篇安裝進度條套件。
+>
+> 但如果你還是想要使用舊方法或者不想升級，請參考以下用法：
+> ```js
+> destroy() {
+>   if (confirm('確定要刪除當前帳號? 所有文章將會被刪除，且此操作不可恢復!')) {
+>     this.destroyLoading = true
+>     this.$inertia.delete('/user').then(() => this.destroyLoading = false)
+>   }
+> }
+> ```
+
 在首頁掛上刪除成功的訊息：
 
 *resources/js/Pages/HelloWorld.vue*
