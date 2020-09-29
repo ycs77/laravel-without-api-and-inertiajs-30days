@@ -400,4 +400,4 @@ public function __invoke(Post $post)
 ## 參考資料
 
 * [Partial reloads - The protocol - Inertia.js](https://inertiajs.com/the-protocol#partial-reloads)
-* [Lazy evaluation - Responses - Inertia.js](https://inertiajs.com/responses#lazy-evaluation)
+* [Partial reloads - Inertia.js](https://inertiajs.com/partial-reloads)
