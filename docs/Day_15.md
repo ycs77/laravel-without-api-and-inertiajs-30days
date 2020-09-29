@@ -120,7 +120,7 @@ export default {
         data.append(key, this.form[key] || '')
       }
 
-      return this.$inertia.post('/posts', data).then(() => {
+      this.$inertia.post('/posts', data).then(() => {
         this.loading = false
         if (! Object.keys(this.$page.errors).length) {
           this.form.thumbnail = null
