@@ -50,12 +50,15 @@ export default {
   },
   methods: {
     submit() {
-      this.loading = true
       this.$inertia.post(`/posts/${this.post.id}/comments`, this.form, {
-        preserveScroll: true
-      }).then(() => {
-        this.loading = false
-        this.form.content = ''
+        preserveScroll: true,
+        onStart: () => this.loading = true,
+        onFinish: () => this.loading = false,
+        onSuccess: () => {
+          if (! Object.keys(this.$page.errors).length) {
+            this.form.content = ''
+          }
+        }
       })
     }
   }

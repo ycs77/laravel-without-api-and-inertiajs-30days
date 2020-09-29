@@ -30,9 +30,9 @@
 
 這個系列會觸及到前後端，會使用到的框架有以下：
 
-* [Laravel](https://laravel.com/)
-* [Vue.js](https://cn.vuejs.org/)
-* [Tailwind CSS](https://tailwindcss.com/)
+* [Laravel](https://laravel.com/) v7
+* [Vue.js](https://cn.vuejs.org/) v2.6
+* [Tailwind CSS](https://tailwindcss.com/) v1.8
 
 Laravel 和 Vue.js 都是非常熱門的框架，放眼網路世界都可以找到許多學習資源，在鐵人賽中也有不少以此為主題的文章，因此我不會從入門開始講起。如果你想要繼續往下看，會基本的 Laravel 和 Vue.js 會比較適合。而要會到哪種程度？Laravel 至少會 Controller、Model，Vue.js 至少會基本的組件，有以上知識應該可以跟得上吧！(再不行就單純複製貼上...)
 

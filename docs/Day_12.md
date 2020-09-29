@@ -112,20 +112,21 @@ export default {
   },
   methods: {
     submit() {
-      this.loading = true
-
       const data = new FormData()
       for (const key in this.form) {
         data.append(key, this.form[key] || '')
       }
       data.append('_method', 'put')
 
-      this.$inertia.post('/user', data).then(() => {
-        this.loading = false
-        if (! Object.keys(this.$page.errors).length) {
-          this.form.password = ''
-          this.form.password_confirmation = ''
-          this.form.avatar = null
+      this.$inertia.post('/user', data, {
+        onStart: () => this.loading = true,
+        onFinish: () => this.loading = false,
+        onSuccess: () => {
+          if (! Object.keys(this.$page.errors).length) {
+            this.form.password = ''
+            this.form.password_confirmation = ''
+            this.form.avatar = null
+          }
         }
       })
     }

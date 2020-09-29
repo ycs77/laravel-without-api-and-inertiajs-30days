@@ -238,8 +238,9 @@ export default {
       ...
       this.$inertia.post(`/posts/${this.post.id}/comments`, this.form, {
         preserveScroll: true,
-        only: ['comments', 'errors']
-      }).then(() => {...})
+        only: ['comments', 'errors'],
+        ...
+      })
     }
   }
 }

@@ -141,7 +141,7 @@ export default {
       ...
       if (this.isEdit) data.append('_method', 'put')
 
-      this.$inertia.post(this.isEdit ? `/posts/${this.post.id}` : '/posts', data).then(() => {
+      this.$inertia.post(this.isEdit ? `/posts/${this.post.id}` : '/posts', data, {
         ...
       })
     }

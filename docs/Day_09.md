@@ -286,8 +286,10 @@ export default {
   ...
   methods: {
     submit() {
-      this.loading = true
-      this.$inertia.post('/login', this.form).then(() => this.loading = false)
+      this.$inertia.post('/login', this.form, {
+        onStart: () => this.loading = true,
+        onFinish: () => this.loading = false
+      })
     }
   },
   ...
@@ -466,26 +468,35 @@ protected function attemptLogin(Request $request)
 
 ## 載入進度條
 
-Inertia.js 整合了 [NProgress](https://ricostacruz.com/nprogress/)，頁面載入時頂部有那條細長的進度條。Inertia.js 還設定讓它在頁面載入超過 250 毫秒時才顯示。但預設不載入 CSS，所以才看不到。那就讓我們自己來調吧：
+Inertia.js v0.3 把整合 [NProgress](https://ricostacruz.com/nprogress/) 的部分抽出到 `@inertiajs/progress` 套件裡，安裝之後頁面載入時頂部就會出現那條細長的進度條，預設在頁面載入超過 250 毫秒時才顯示：
 
-*resources/css/components.css*
-```css
-/* NProgress */
-#nprogress {
-  @apply pointer-events-none;
-  .bar {
-    @apply fixed top-0 inset-x-0 w-screen bg-purple-400;
-    height: 3px;
-    z-index: 9999;
-  }
-}
+```bash
+yarn add @inertiajs/progress
+```
+
+安裝好之後在 `app.js` 裡設定進度條顏色及初始化：
+
+*resources/js/app.js*
+```js
+import { InertiaProgress } from '@inertiajs/progress'
+
+InertiaProgress.init({
+  color: '#ac94fa'
+})
 ```
 
 ![](../images/day09-07.jpg)
 
 進度條出現~~
 
-如果你電腦太好、本地跑太快都看不到進度條，但又很想看進度條跑過去的樣子，可以新增 `Middleware`，裡面加一個 `sleep(1)` 就可以囉！
+如果你電腦太好、本地跑太快都看不到進度條，但又很想看進度條跑過去的樣子，可以把 `delay` 設為 0，關閉 250 毫秒的延時：
+
+*resources/js/app.js*
+```js
+InertiaProgress.init({
+  delay: 0
+})
+```
 
 ## 總結
 

@@ -61,8 +61,10 @@ export default {
     ...
     destroy() {
       if (confirm('確定要刪除當前帳號? 所有文章將會被刪除，且此操作不可恢復!')) {
-        this.destroyLoading = true
-        this.$inertia.delete('/user').then(() => this.destroyLoading = false)
+        this.$inertia.delete('/user', {
+          onStart: () => this.destroyLoading = true,
+          onFinish: () => this.destroyLoading = false
+        })
       }
     }
   }

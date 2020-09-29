@@ -116,7 +116,7 @@ composer require inertiajs/inertia-laravel
 
 ```bash
 yarn add vue@^2.6 vue-meta@^2.4 vue-template-compiler@^2.6 \
-  @inertiajs/inertia@^0.2 @inertiajs/inertia-vue@^0.2
+  @inertiajs/inertia@^0.3 @inertiajs/inertia-vue@^0.2.4
 ```
 
 > 雖然 Vue.js 3 已經到 Beta 版了，但它和 2 版的差異實在不小，且還有套件相容性等問題，目前不考慮使用。在本系列還是使用 Vue.js 2。
