@@ -227,7 +227,7 @@ public function __invoke(Post $post)
 
 ## 新增留言後部分重載
 
-在新增留言後也可以使用部分重載，加上 `only: ['comments']` 就可以了：
+在新增留言後也可以使用部分重載，加上 `only: ['comments', 'errors']` 就可以了：
 
 *resources/js/Lightning/CommentForm.vue*
 ```vue
@@ -238,7 +238,7 @@ export default {
       ...
       this.$inertia.post(`/posts/${this.post.id}/comments`, this.form, {
         preserveScroll: true,
-        only: ['comments']
+        only: ['comments', 'errors']
       }).then(() => {...})
     }
   }
