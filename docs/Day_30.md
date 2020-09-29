@@ -12,7 +12,7 @@
 
 > 當然 Inertia.js 也不是萬能的，原本 Inertia.js 只是要設計給單純的前端 SPA + 後端使用，如果你想要串接第三方 (例：APP) 的話，還是得開發 API，這裡請注意。
 
-這個系列不是完全針對 Inertia.js 講解，而是實作一個完整的專案的同時，順便解說 Inertia.js 的使用方式。原因是我認為 Inertia.js 在這整個專案中是如同膠水般的存在，旨在填補前端與後端的隙縫，讓前後端都可以發揮自己的專長，而且用專案的方式可以學到實際開發時的用法。如果想要完全了解 Inertia.js 的使用方式，建議看過 [Inertia.js 官方文檔](https://inertiajs.com/)。除了官方文檔外，還請務必要看過這兩篇文章，是 Inertia.js 的老爸 Jonathan Reinink 寫的文章，內容是關於 Inertia.js 的發想到實現：
+這個系列不是完全針對 Inertia.js 講解，而是實作一個完整的專案的同時，順便解說 Inertia.js 的使用方式。原因是我認為 Inertia.js 在這整個專案中是如同膠水般的存在，旨在填補前端與後端的隙縫，讓前後端都可以發揮自己的專長，而且用專案的方式可以學到實際開發時的用法。如果想要完全了解 Inertia.js 的使用方式，建議看過 [Inertia.js 官方文檔](https://inertiajs.com/)。除了官方文檔外，還請務必要看過 Inertia.js 的老爸 Jonathan Reinink 寫的文章，內容是關於 Inertia.js 的發想到實現：
 
 * [Server-side apps with client-side rendering](https://reinink.ca/articles/server-side-apps-with-client-side-rendering)
 * [Introducing Inertia.js](https://reinink.ca/articles/introducing-inertia-js)
