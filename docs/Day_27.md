@@ -15,7 +15,7 @@
 }
 ```
 
-然後新增一個檔案 Procfile 來指定 Laravel 的根目錄：
+然後新增一個檔案 Procfile 來指定 Heroku 網站的根目錄：
 
 *Procfile*
 ```
@@ -36,7 +36,7 @@ web: vendor/bin/heroku-php-apache2 public/
 
 ![](../images/day27-03.jpg)
 
-Buildpacks 可以安裝構建時需要使用的程式語言，我們要用 PHP 和 Node.js 兩個語言，按右邊「Add buildpack」選擇，注意一定要照這個順序！：
+Buildpacks 可以安裝構建時需要使用的程式語言，我們要用 PHP 和 Node.js 兩個語言，按右邊「Add buildpack」選擇，注意 Buildpacks 一定要照這個順序！：
 
 ![](../images/day27-04.jpg)
 
@@ -70,7 +70,7 @@ git push heroku master
 
 ## 設定環境變數
 
-其實這是因為沒配置環境變數。當然也可以用命令行操作，不過這裡我想要在網頁裡設定。一樣點「Settings」>「Reveal Config Vars」按鈕：
+其實這是因為沒配置環境變數。當然也可以用命令行操作，不過這裡我想要在網頁裡設定。點「Settings」>「Reveal Config Vars」按鈕：
 
 ![](../images/day27-07.jpg)
 
@@ -91,7 +91,7 @@ LOG_CHANNEL=stderr
 
 ## 使用 Heroku Postgres 資料庫
 
-再來要安裝 Heroku Postgres，先點 [Heroku Postgres 的安裝頁面](https://elements.heroku.com/addons/heroku-postgresql)，然後點右邊的「Install Heroku Postgres」：
+再來要安裝 Heroku Postgres，先開啟 [Heroku Postgres 的安裝頁面](https://elements.heroku.com/addons/heroku-postgresql)，然後點右邊的「Install Heroku Postgres」：
 
 ![](../images/day27-09.jpg)
 
@@ -180,7 +180,7 @@ git push heroku master
 
 ## 總結
 
-經歷了一番波折，終於成功地把 Lightning 部署到 Heroku 了。但要記住 Heroku 的免費版過 30 分鐘會自動休眠，叫醒花約半分鐘時間，只能用來自己玩玩而已。而且如果你去上傳檔案，你會發現 Heroku 不能存檔案，即使跑過 `heroku run php artisan storage:link` 也一樣，因此下篇要來串接 [Cloudinary](https://cloudinary.com/)，用於儲存上傳的圖片。
+經歷了一番波折，終於成功地把 Lightning 部署到 Heroku 了。但要記住 Heroku 的免費版過 30 分鐘會自動休眠，叫醒花約半分鐘時間，只能用來自己玩玩而已。而且 Heroku 儲存檔案有問題，即使跑過 `heroku run php artisan storage:link`、`FILESYSTEM_DRIVER` 設成 `public` 也一樣，因此下篇要來串接 [Cloudinary](https://cloudinary.com/)，儲存上傳到 Lightning 的圖片。
 
 > Lightning 範例程式碼：https://github.com/ycs77/lightning
 
