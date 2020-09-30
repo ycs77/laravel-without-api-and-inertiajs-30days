@@ -56,7 +56,7 @@ curl -v --compressed -H "Range: bytes=0-524288" -H "Connection: close" -A "faceb
 
 別看本篇超短，卻是整個系列中花最多時間研究的！除了本篇使用 ChromeDriver 來做 SSR，也有 [V8Js (PHP extension)](https://github.com/phpv8/v8js) 或 [Prerender (Node.js)](https://github.com/prerender/prerender) 等的選擇。
 
-到此為止，我們完成了一個簡易的部落格平台 Lightning，了解了 Inertia.js 的使用方式。下篇將是系列的總結和 Inertia.js 相關的內容，不要錯過啊！
+到此為止，我們完成了一個簡易的部落格平台 Lightning。下篇將是系列的總結，來談 Inertia.js 相關的內容，不要錯過啊！
 
 > Lightning 範例程式碼：https://github.com/ycs77/lightning
 
