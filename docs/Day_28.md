@@ -1,6 +1,6 @@
 # Day 28 串接 Cloudinary (媒體存儲服務)
 
-有用過 Heroku 都知道，無法正常儲存上傳的檔案，因此在本篇中要來串接 [Cloudinary](https://cloudinary.com/)，它是一個提供媒體存儲服務的平台，專門存放圖片、影片等媒體檔案。
+有用過 Heroku 都知道，無法正常儲存上傳的檔案，因此在本篇中要來串接 [Cloudinary](https://cloudinary.com/)，它是一個提供存放圖片、影片等媒體檔案的平台。
 
 ## 安裝 Cloudinary 套件
 
@@ -16,7 +16,7 @@ composer require cloudinary-labs/cloudinary-laravel
 $request->file('image')->storeOnCloudinary('images_folder')->getSecurePath();
 ```
 
-可是我們原本用的 `local` driver 是用 `store()` 儲存檔案，為了適配兩種儲存方式，要在 `UploadedFile` 新增一個儲存檔案的方法 `storeFile()`，在 Laravel 裡可以用 macro 來擴充類別的方法：
+可是我們原本用的 `local` driver 是用 `store()` 儲存檔案，為了適配兩種儲存方式，我們現在要在 `UploadedFile` 新增一個儲存檔案的方法 `storeFile()`，在 Laravel 裡可以用 macro 來擴充類別的方法：
 
 *app/Providers/AppServiceProvider.php*
 ```php
@@ -88,7 +88,7 @@ public function mavonEditorImage(Request $request)
 
 ## 總結
 
-串接 Cloudinary 後，解決了 Heroku 存方圖片的問題。同時本系列已進入尾聲，下篇會用 Depictr 來解決 Inertia.js 的 SEO 問題，讓我們的 Lightning 可以被爬蟲正常爬取資料。
+串接 Cloudinary 後，解決了 Heroku 存放圖片的問題。同時本系列也已進入尾聲。下篇會用 Depictr 來解決 Inertia.js 的 SEO 問題，讓我們的 Lightning 的文章可以被爬蟲正常爬取資料。
 
 > Lightning 範例程式碼：https://github.com/ycs77/lightning
 
