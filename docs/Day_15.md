@@ -54,7 +54,7 @@ class PostController extends Controller
       <div class="grid gap-6 mt-6">
         <text-input v-model="form.title" :error="$page.errors.title" label="標題" ref="titleInput" autocomplete="off" />
         <textarea-input v-model="form.content" :error="$page.errors.content" label="內容" />
-        <file-input v-model="form.thumbnail" :error="$page.errors.thumbnail" type="file" accept="image/*" label="分享預覽圖片" browseText="選擇圖片" />
+        <file-input v-model="form.thumbnail" :error="$page.errors.thumbnail" accept="image/*" label="分享預覽圖片" browseText="選擇圖片" />
         <img v-if="post.thumbnail" :src="post.thumbnail" class="h-48 rounded">
         <div class="font-light mb-4">
           <label>

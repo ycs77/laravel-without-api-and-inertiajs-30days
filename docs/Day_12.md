@@ -67,7 +67,7 @@ public function edit()
         <textarea-input v-model="form.description" :error="$page.errors.description" class="md:col-span-2" label="個人簡介" />
         <text-input v-model="form.password" :error="$page.errors.password" type="password" label="密碼" />
         <text-input v-model="form.password_confirmation" type="password" label="確認密碼" />
-        <file-input v-model="form.avatar" :error="$page.errors.avatar" type="file" accept="image/*" label="大頭照" browseText="選擇圖片" />
+        <file-input v-model="form.avatar" :error="$page.errors.avatar" accept="image/*" label="大頭照" browseText="選擇圖片" />
         <div class="md:col-span-2">
           <loading-button :loading="loading" class="btn btn-purple">更新帳號</loading-button>
         </div>
