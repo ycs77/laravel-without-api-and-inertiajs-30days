@@ -55,7 +55,7 @@ class PostController extends Controller
         <text-input v-model="form.title" :error="$page.errors.title" label="標題" ref="titleInput" autocomplete="off" />
         <textarea-input v-model="form.content" :error="$page.errors.content" label="內容" />
         <file-input v-model="form.thumbnail" :error="$page.errors.thumbnail" accept="image/*" label="分享預覽圖片" browseText="選擇圖片" />
-        <img v-if="post.thumbnail" :src="post.thumbnail" class="h-48 rounded">
+        <img v-if="post.thumbnail" :src="post.thumbnail" class="max-w-xs rounded shadow">
         <div class="font-light mb-4">
           <label>
             <input type="checkbox" class="form-checkbox" v-model="form.published"> 發布文章
