@@ -51,16 +51,6 @@ Laravel 8 發布之際，官方也推出了一個全新的 Laravel 專案腳首�
 * GitHub：[@ycs77](https://github.com/ycs77)
 * 部落格：[星星的筆記．Lucas](https://lucas-yang.vercel.app/)
 
----
-
-如果你有跟著本系列做出一個部落格網站，歡迎在下方留下你的作品的 GitHub 地址，分享你的作品，也可以放截圖喔！
-
-Lightning 範例程式碼：https://github.com/ycs77/lightning
-
-![](../images/day30-01.jpg)
-
----
-
 ## 參考資料
 
 * [Inertia.js 官網](https://inertiajs.com/)
@@ -69,3 +59,11 @@ Lightning 範例程式碼：https://github.com/ycs77/lightning
 * [VILT Stack - A future-proof way to build with Laravel in 2020](https://raison.co/vilt-stack-vue-inertia-laravel-tailwind/)
 * [Server-side apps with client-side rendering](https://reinink.ca/articles/server-side-apps-with-client-side-rendering)
 * [Introducing Inertia.js](https://reinink.ca/articles/introducing-inertia-js)
+
+---
+
+如果你有跟著本系列做出一個部落格網站，歡迎在下方分享你的作品的 GitHub 地址，也可以放截圖喔！
+
+Lightning 範例程式碼：https://github.com/ycs77/lightning
+
+![](../images/day30-01.jpg)
