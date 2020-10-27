@@ -113,7 +113,7 @@ Content-Type: application/json
 
 > ㄝ...那個 Inertia.js 怎麼消失了呢？其實它還在。前端的 Inertia 套件都是包裝過 Inertia.js 並針對各個框架適配。
 
-只要一個前端和一個後端，隨你怎麼搭，都可以建構 Inertia 架構的 SPA 應用！如果你想要用其他框架，可以參考[社區維護的 Inertia 套件](https://inertiajs.com/installation#community-adapters)。
+只要一個前端和一個後端，隨你怎麼搭，都可以建構 Inertia 架構的 SPA 應用！如果你想要用其他框架，可以參考[社區維護的 Inertia 套件](https://inertiajs.com/community-adapters)。
 
 ## 總結
 
