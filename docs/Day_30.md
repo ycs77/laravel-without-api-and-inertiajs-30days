@@ -46,6 +46,10 @@ Laravel 8 發布之際，官方也推出了一個全新的 Laravel 專案腳首�
 
 會選 Inertia.js 當主題是因為，當初發現用 Inertia.js 可以讓我的 Laravel + Vue.js 專案有著如此完美的結合，馬上就看完官方文檔，然後加到我的新專案中開始研究。研究著就萌生出一個想法，如果更多人知道這個東西該有多好，以後一個人開發 SPA 就不用再架 API 和花時間學架前端應用了。基於這個想法，就報了鐵人賽，寫出了這個系列，期待更多全端開發者可以認識到這個有趣的新技術。而且這個東西是在去年 2019 年才出現，趁早寫不會有人和我搶主題 XD。
 
+Lightning 範例程式碼：https://github.com/ycs77/lightning
+
+![](../images/day30-01.jpg)
+
 我是 Lucas Yang (楊晨信)，感謝你的閱讀，希望本系列可以幫到那個還在寫 API 開發 SPA 的你。
 
 * GitHub：[@ycs77](https://github.com/ycs77)
@@ -59,11 +63,3 @@ Laravel 8 發布之際，官方也推出了一個全新的 Laravel 專案腳首�
 * [VILT Stack - A future-proof way to build with Laravel in 2020](https://raison.co/vilt-stack-vue-inertia-laravel-tailwind/)
 * [Server-side apps with client-side rendering](https://reinink.ca/articles/server-side-apps-with-client-side-rendering)
 * [Introducing Inertia.js](https://reinink.ca/articles/introducing-inertia-js)
-
----
-
-如果你有跟著本系列做出一個部落格網站，歡迎在下方分享你的作品的 GitHub 地址，也可以放截圖喔！
-
-Lightning 範例程式碼：https://github.com/ycs77/lightning
-
-![](../images/day30-01.jpg)
