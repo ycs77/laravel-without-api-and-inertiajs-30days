@@ -83,8 +83,21 @@ indent_size = 2
 最後我們要來安裝 Laravel 端的 Inertia 套件：
 
 ```bash
-composer require inertiajs/inertia-laravel
+composer require inertiajs/inertia-laravel:^0.2
 ```
+
+> 2020/11/06: Laravel 端的 Inertia 套件在 v3.0 有重大更新，需要自行發布和註冊 Middleware，(但本系列目前不打算更新...)：
+>
+> ```
+> php artisan inertia:middleware
+> ```
+>
+> ```php
+> 'web' => [
+>     // ...
+>     \App\Http\Middleware\HandleInertiaRequests::class,
+> ],
+> ```
 
 然後新增 SPA 的入口 `resources/views/app.blade.php`。`@inertia` 是 Blade 指令，會編譯成 `<div id="app" data-page="{...}"></div>` 來啟動 SPA：
 
