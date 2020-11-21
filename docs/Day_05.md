@@ -8,10 +8,12 @@ Tailwind CSS 可以在 HTML 完成 RWD、Hover、Focus 等功能，而且 class 
 
 ## 安裝 Tailwind CSS
 
+> 2020/11/22 Tailwind CSS 當前已更新至 v2，但本系列使用 v1
+
 先執行：
 
 ```bash
-yarn add tailwindcss @tailwindcss/ui @tailwindcss/custom-forms \
+yarn add tailwindcss@^1.9 @tailwindcss/ui @tailwindcss/custom-forms \
   autoprefixer postcss-import postcss-nested
 ```
 
