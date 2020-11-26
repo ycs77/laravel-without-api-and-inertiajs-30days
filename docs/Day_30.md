@@ -8,7 +8,7 @@
 > 
 > —— [Inertia.js 官網](https://inertiajs.com/)
 
-這是一個「關於我用 Laravel 寫 SPA 卻不寫 API 的那檔事」，相信看到這裡的讀者們都已經知道答案了，在此系列介紹了 Inertia.js 這個新的網頁架構，確實拉近了前端與後端的距離。除了可以用 Laravel + Vue.js 的組合外，也可以套[其他的框架組合](https://inertiajs.com/installation)。讓全端開發者可以輕鬆構建現代 SPA 網站而不需要寫 API。
+這是一個「關於我用 Laravel 寫 SPA 卻不寫 API 的那檔事」，相信看到這裡的讀者們都已經知道答案了，在此系列介紹了 Inertia.js 這個新的網頁架構，確實拉近了前端與後端的距離。除了可以用 Laravel + Vue.js 的組合外，也可以套[其他的框架組合](https://inertiajs.com/community-adapters)。讓全端開發者可以輕鬆構建現代 SPA 網站而不需要寫 API。
 
 > 當然 Inertia.js 也不是萬能的，原本 Inertia.js 只是要設計給單純的前端 SPA + 後端使用，如果你想要串接第三方 (例：APP) 的話，還是得開發 API，這裡請注意。
 
