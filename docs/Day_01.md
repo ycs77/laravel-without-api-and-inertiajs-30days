@@ -1,5 +1,20 @@
 # Day 01 為什麼我用 Laravel 寫 SPA 卻可以不寫 API?
 
+> 2021/03/19:
+>
+> ## 前言
+>
+> 必須得承認，這個系列真是頻繁出事，用了 Laravel 7，寫到一半升到 8；Vue.js 2.6 升到 3；Tailwind CSS 1.8 升到 2；Inertia.js 突然開始頻繁更新，且不兼容舊版；Depictr 套件作者不維護；所以在本系列中會看到各種鎖版號。再加上這個系列可以說是寫我想寫的東西，簡單來說就是放飛自我。在這裡建議讀者們在學習 Inertia.js 過程中可以佐以下方資料參考：
+>
+> * [Inertia.js 官網](https://inertiajs.com/)
+> * [Ping CRM](https://demo.inertiajs.com/)
+> * [Server-side apps with client-side rendering](https://reinink.ca/articles/server-side-apps-with-client-side-rendering)
+> * [Introducing Inertia.js](https://reinink.ca/articles/introducing-inertia-js)
+>
+> 以及如果聽得懂英文的話，推薦看過 Laracasts 新上架的 [Learn Inertia With Jeffrey](https://laracasts.com/series/learn-inertia-with-jeffrey) 課程。
+>
+> 這個系列真心對全端新手十分不友好，這是無庸置疑的。但如果可以趁此機會，抓緊時間去學習新的技術，這些技術將會是你自己的。加油！
+
 在回答這個問題之前，我們先回來看看網頁前後端的區別吧！
 
 以後端為基礎的網頁應用，優點是天生SEO良好，缺點是載入速度較慢。後來以AJAX為基礎，誕生了前端的網頁應用，優點是有良好的使用者互動，缺點是SEO先天不佳（依賴後天補足）而且要寫API（重點在這）。以上大家都耳熟能詳，這裡只大概帶過，想要詳細了解前後端的差異請參考 [Rendering on the Web](https://developers.google.com/web/updates/2019/02/rendering-on-the-web) 這篇文章。
@@ -38,13 +53,15 @@ Laravel 和 Vue.js 都是非常熱門的框架，放眼網路世界都可以找�
 
 以前刻板大多都使用 Bootstrap，但樣式看起來都長得很「Bootstrap」，且少了高度客製化的靈活度。這裡我用 [Tailwind CSS](https://tailwindcss.com/) 來代替它，Tailwind CSS 是一個 Utility-First 的 CSS 框架，沒聽過？沒關係，後面我會介紹，然後跟者入坑就對了。
 
+> 如果你想深度了解和學習使用 Tailwind CSS 刻板，可以看六角學院校長的鐵人賽影片教學 [CSS 優良部份](https://ithelp.ithome.com.tw/users/20040221/ironman/3567)，有詳細介紹 Tailwind CSS 的使用方式。
+
 在這個系列文章我將使用以上框架，建構一個簡易的部落格平台 **Lightning**，來帶大家了解 Inertia.js。用實際的專案來了解在開發時會遇到的各種問題。主要會實作以下功能：
 
 * 用戶登入/註冊 *(放心可以登出)*
 * 撰寫文章/編輯/刪除 *(只能用 Markdown 寫文章)*
 * 文章留言/刪除 *(不做回覆留言)*
 * 部屬到 Heroku *(zzz...)*
-* Server Side Rendering 功能 *(只對機器人做渲染，解決 SEO 問題)*
+* Server Side Rendering 功能 *(只對機器人做渲染，解決 SEO 問題)* (2021/03/19: Depictr 套件目前已停止維護，不建議使用)
 
 **準 備 好 了 嗎？**
 

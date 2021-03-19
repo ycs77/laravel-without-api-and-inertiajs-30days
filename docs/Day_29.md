@@ -1,5 +1,7 @@
 # Day 29 用 Depictr 做 SSR，解決 Inertia.js 的 SEO 問題
 
+> 2021/03/19: Depictr 套件目前已停止維護，不建議使用。(哭...)
+
 SEO 問題一直都是 SPA 的問題點，不過後來出現了 SSR (Server-Side Rendering) 的解決方案。本篇就是要介紹用在 Laravel + Inertia 的 SSR 套件 [Depictr](https://github.com/Juhlinus/depictr)，Depictr 使用 [Symfony Panther](https://github.com/symfony/panther) 和 [ChromeDriver](https://chromedriver.chromium.org/) 來渲染 HTML 並回傳，而且只會在爬蟲程式來敲門時才會渲染，完美地解決 SEO 問題。
 
 ## 安裝 Depictr

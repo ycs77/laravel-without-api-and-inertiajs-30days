@@ -107,6 +107,7 @@ Content-Type: application/json
 
 * [React](https://github.com/inertiajs/inertia/tree/master/packages/inertia-react)
 * [Vue.js](https://github.com/inertiajs/inertia/tree/master/packages/inertia-vue)
+* [Vue.js 3](https://github.com/inertiajs/inertia/tree/master/packages/inertia-vue3)
 * [Svelte](https://github.com/inertiajs/inertia/tree/master/packages/inertia-svelte)
 * [Laravel](https://github.com/inertiajs/inertia-laravel)
 * [Rails](https://github.com/inertiajs/inertia-rails)
