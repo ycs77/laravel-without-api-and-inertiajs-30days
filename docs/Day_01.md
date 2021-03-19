@@ -7,7 +7,7 @@
 > 必須得承認，這個系列真是頻繁出事，用了 Laravel 7，寫到一半升到 8；Vue.js 2.6 升到 3；Tailwind CSS 1.8 升到 2；Inertia.js 突然開始頻繁更新，且不兼容舊版；Depictr 套件作者不維護；所以在本系列中會看到各種鎖版號。再加上這個系列可以說是寫我想寫的東西，簡單來說就是放飛自我。在這裡建議讀者們在學習 Inertia.js 過程中可以佐以下方資料參考：
 >
 > * [Inertia.js 官網](https://inertiajs.com/)
-> * [Ping CRM](https://demo.inertiajs.com/)
+> * [Ping CRM - 官方範例](https://demo.inertiajs.com/)
 > * [Server-side apps with client-side rendering](https://reinink.ca/articles/server-side-apps-with-client-side-rendering)
 > * [Introducing Inertia.js](https://reinink.ca/articles/introducing-inertia-js)
 >
