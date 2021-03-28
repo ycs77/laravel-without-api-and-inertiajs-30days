@@ -1,6 +1,6 @@
 # Day 01 為什麼我用 Laravel 寫 SPA 卻可以不寫 API?
 
-> 2021/03/19:
+> 2021/03/28:
 >
 > ## 前言
 >
@@ -12,6 +12,8 @@
 > * [Introducing Inertia.js](https://reinink.ca/articles/introducing-inertia-js)
 >
 > 以及如果聽得懂英文的話，推薦看過 Laracasts 新上架的 [Learn Inertia With Jeffrey](https://laracasts.com/series/learn-inertia-with-jeffrey) 課程。
+>
+> 因為本系列有依賴多個過時套件，看完本系列之後還是去官網了解最新的用法會比較好。
 >
 > 這個系列真心對全端新手十分不友好，這是無庸置疑的。但如果可以趁此機會，抓緊時間去學習新的技術，這些技術將會是你自己的。加油！
 
