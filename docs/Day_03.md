@@ -199,7 +199,7 @@ mix
 
 ## 總結
 
-本篇把建構 Lightning 的第一步完成了，安裝前端和後端套件們和基本的設定。其實這一連串動作是可以包裝成 [Preset](https://usepreset.dev/) 一行指令搞定，但為了可以了解 Inertia 我們還是一步一步自己操作。那什麼時候要 Hello world 呢？這個部分就留到下一篇吧！
+本篇把建構 Lightning 的第一步完成了，安裝前端和後端套件們和基本的設定。其實這一連串動作是可以包裝成 [Preset](https://preset.dev/) 一行指令搞定，但為了可以了解 Inertia 我們還是一步一步自己操作。那什麼時候要 Hello world 呢？這個部分就留到下一篇吧！
 
 > Lightning 範例程式碼：https://github.com/ycs77/lightning
 
